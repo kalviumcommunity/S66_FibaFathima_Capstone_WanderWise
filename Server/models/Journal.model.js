@@ -1,12 +1,37 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const JournalEntrySchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip' },
-    entryDate: Date,
-    mood: String,
-    content: String,
-    images: [String],
-  }, { timestamps: true });
+const JournalSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  tripId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Trip',
+    required: true
+  },
+  entries: [
+    {
+      date: {
+        type: Date,
+        required: true
+      },
+      mood: {
+        type: String,
+        required: true
+      },
+      content: {
+        type: String,
+        required: true
+      },
+      photos: [
+        {
+          type: String, 
+        }
+      ]
+    }
+  ]
+}, { timestamps: true });
 
-  module.exports = mongoose.model("Journal",JournalEntrySchema)
+module.exports = mongoose.model('Journal', JournalSchema);
