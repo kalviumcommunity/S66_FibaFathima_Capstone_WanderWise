@@ -2,7 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const userRoutes = require('./Routes/Auth')
 const destinationRoutes = require('./Routes/destination');
+const tripRouter = require('./Routes/Trip')
 
 
 
@@ -19,8 +21,9 @@ mongoose.connect(process.env.mongoURL).then(()=>{
     console.log(error)
 })
 
-app.use('/api/auth', require('./Routes/Auth'));
+app.use('/api/auth', userRoutes);
 app.use('/api/destinations', destinationRoutes);
+app.use('/api/trips',tripRouter)
 
 
 app.listen(process.env.PORT, () => {
