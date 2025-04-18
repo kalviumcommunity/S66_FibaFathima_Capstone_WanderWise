@@ -84,4 +84,38 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.put('/:id',async(req,res)=>{
+  try {
+    const updateddestination = await Destination.findByIdAndUpdate(
+      res.params.id,
+      req.body,
+      {new:true}
+    );
+    if(!updateddestination){
+      return res.status(404).json({message:"destination not found"})
+    }
+    res.json(updateddestination);
+
+    
+  } catch (error) {
+    res.status(500).json({error:"failed to update destination"})
+    
+  }
+})
+
+router.delete('/:id',async(req,res)=>{
+  try {
+    const deletedDestination = await Destination.findByIdAndDelete(req.params.id);
+    if (!deletedDestination){
+      return res.status(404).json({message:"destination not found"})
+
+    }
+    res.json({message:"destination deleted successfully"})
+  } catch (error) {
+    res.status(500).json({error:"Failed to delete destination"})
+    
+  }
+})
+
+
 module.exports = router;
