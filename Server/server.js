@@ -21,6 +21,10 @@ mongoose.connect(process.env.mongoURL).then(()=>{
     console.log(error)
 })
 
+app.get('/', (req, res) => {
+  res.json("Welcome to my capstone");
+});
+
 app.use('/api/auth', userRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/trips',tripRouter)
