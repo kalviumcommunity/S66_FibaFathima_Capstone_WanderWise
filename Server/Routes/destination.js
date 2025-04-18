@@ -2,6 +2,45 @@ const express = require('express');
 const router = express.Router();
 const Destination = require('../models/destination.model');
 
+
+//add a destination
+router.post('/', async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      country, 
+      location,
+      images,
+      activities,
+      bestSeason,
+      popularAttractions,
+      isPopular
+    } = req.body;
+
+    const newDestination = new Destination({
+      name,
+      description,
+      country,
+      location,
+      images,
+      activities,
+      bestSeason,
+      popularAttractions,
+      isPopular
+    });
+
+    const savedDestination = await newDestination.save();
+    res.status(201).json({
+      message: 'Destination added successfully',
+      destination: savedDestination
+    });
+  } catch (error) {
+    console.error('Error creating destination:', error);
+    res.status(500).json({ message: 'Server error while adding destination' });
+  }
+});
+
 // Get all destinations
 router.get('/', async (req, res) => {
   try {
@@ -12,42 +51,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-    try {
-      const {
-        name,
-        description,
-        country, 
-        location,
-        images,
-        activities,
-        bestSeason,
-        popularAttractions,
-        isPopular
-      } = req.body;
-  
-      const newDestination = new Destination({
-        name,
-        description,
-        country,
-        location,
-        images,
-        activities,
-        bestSeason,
-        popularAttractions,
-        isPopular
-      });
-  
-      const savedDestination = await newDestination.save();
-      res.status(201).json({
-        message: 'Destination added successfully',
-        destination: savedDestination
-      });
-    } catch (error) {
-      console.error('Error creating destination:', error);
-      res.status(500).json({ message: 'Server error while adding destination' });
-    }
-  });
 
 //get destination by id
 router.get('/:id', async (req, res) => {
