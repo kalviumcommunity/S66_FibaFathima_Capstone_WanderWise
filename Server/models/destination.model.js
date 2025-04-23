@@ -39,3 +39,4 @@ const DestinationSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Destination', DestinationSchema);
+
