@@ -1,7 +1,7 @@
 ## WanderWise - Smart Travel Planner
 
 #### Backend Deployed Link
-    - https://s66-fibafathima-capstone-wanderwise.onrender.com
+    https://s66-fibafathima-capstone-wanderwise.onrender.com/
 
 ### Idea Brief:
 **Project Name**: WanderWise
