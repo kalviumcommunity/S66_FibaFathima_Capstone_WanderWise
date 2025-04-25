@@ -14,27 +14,30 @@ router.post('/',async(req,res)=>{
     }
 })
 
-router.get("/",async(req,res)=>{
+router.get("/", async (req, res) => {
     try {
-        const trips = await Trip.find();
-        res.json(trips)
+      const trips = await Trip.find()
+        .populate("userId", "username email") 
+        .populate("destinationId", "name country");
+      res.json(trips);
     } catch (error) {
-        res.status(500).jsom({error:error.message})
-        
+      res.status(500).json({ error: error.message });
     }
-})
+  });
 
-router.get('/:id',async(req,res)=>{
+  router.get('/:id', async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.id);
-        if(!trip){
-            return res.status(404).json({message:'trip not found'})
-        }
-        res.json(trip)
+      const trip = await Trip.findById(req.params.id)
+        .populate("userId", "username email")
+        .populate("destinationId", "name country");
+      if (!trip) {
+        return res.status(404).json({ message: 'Trip not found' });
+      }
+      res.json(trip);
     } catch (error) {
-        res.status(500).json({error:error.message})
+      res.status(500).json({ error: error.message });
     }
-})
+  });
 
 router.put("/:id",async(req,res)=>{
     try {

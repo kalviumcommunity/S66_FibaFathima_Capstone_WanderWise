@@ -9,7 +9,7 @@ const BudgetItemSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Transportation', 'Accommodation', 'Food', 'Activities', 'Miscellaneous'], // Possible categories
+    enum: ['Transportation', 'Accommodation', 'Food', 'Activities', 'Miscellaneous'], 
   },
   amount: {
     type: Number,
@@ -17,7 +17,7 @@ const BudgetItemSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    default: 'USD', // Default currency, but can be changed based on user's location or preferences
+    default: 'INR', 
   },
   notes: {
     type: String,
