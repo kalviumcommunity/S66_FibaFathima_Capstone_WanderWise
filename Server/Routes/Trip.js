@@ -9,7 +9,7 @@ router.post('/',async(req,res)=>{
         const savedTrip = await newTrip.save();
         res.status(201).json(savedTrip);
     } catch (error) {
-        res.status(500).json({error:"Failed to create a trip",details:errpr.message})
+        res.status(500).json({error:"Failed to create a trip",details:error.message})
         
     }
 })
