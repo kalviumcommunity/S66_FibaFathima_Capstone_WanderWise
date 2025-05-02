@@ -1,5 +1,8 @@
 ## WanderWise - Smart Travel Planner
 
+### Frontend Deployed Link
+    https://wanderwiseca.netlify.app/
+
 #### Backend Deployed Link
     https://s66-fibafathima-capstone-wanderwise.onrender.com/
 
