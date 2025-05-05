@@ -1,13 +1,15 @@
 import { useState } from 'react'
-
+import Signup from './Components/SignUp'
 import './App.css'
+import Login from './Components/Login'
 
 function App() {
 
 
   return (
     <>
-    <h1>Welcome to my capstone</h1>
+    <Login/>
+
      
     </>
   )
