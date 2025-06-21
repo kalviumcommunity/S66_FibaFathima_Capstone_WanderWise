@@ -4,6 +4,88 @@
 const WEATHER_API_KEY = 'YOUR_OPENWEATHER_API_KEY'; // You'll need to get a free API key from OpenWeatherMap
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
+// Mock weather data for demo purposes
+const MOCK_WEATHER_DATA = {
+  'bali': {
+    current: {
+      temp: 28,
+      feels_like: 32,
+      humidity: 75,
+      description: 'Partly Cloudy'
+    },
+    forecast: [
+      { day: 'Today', temp: 28, description: 'Partly Cloudy' },
+      { day: 'Tomorrow', temp: 29, description: 'Sunny' },
+      { day: 'Day 3', temp: 27, description: 'Light Rain' }
+    ]
+  },
+  'tokyo': {
+    current: {
+      temp: 22,
+      feels_like: 24,
+      humidity: 65,
+      description: 'Clear Sky'
+    },
+    forecast: [
+      { day: 'Today', temp: 22, description: 'Clear Sky' },
+      { day: 'Tomorrow', temp: 20, description: 'Cloudy' },
+      { day: 'Day 3', temp: 18, description: 'Light Rain' }
+    ]
+  },
+  'paris': {
+    current: {
+      temp: 18,
+      feels_like: 20,
+      humidity: 70,
+      description: 'Cloudy'
+    },
+    forecast: [
+      { day: 'Today', temp: 18, description: 'Cloudy' },
+      { day: 'Tomorrow', temp: 16, description: 'Light Rain' },
+      { day: 'Day 3', temp: 19, description: 'Partly Cloudy' }
+    ]
+  },
+  'newyork': {
+    current: {
+      temp: 15,
+      feels_like: 17,
+      humidity: 60,
+      description: 'Clear Sky'
+    },
+    forecast: [
+      { day: 'Today', temp: 15, description: 'Clear Sky' },
+      { day: 'Tomorrow', temp: 12, description: 'Cloudy' },
+      { day: 'Day 3', temp: 14, description: 'Partly Cloudy' }
+    ]
+  },
+  'iceland': {
+    current: {
+      temp: 8,
+      feels_like: 6,
+      humidity: 80,
+      description: 'Light Rain'
+    },
+    forecast: [
+      { day: 'Today', temp: 8, description: 'Light Rain' },
+      { day: 'Tomorrow', temp: 6, description: 'Cloudy' },
+      { day: 'Day 3', temp: 7, description: 'Partly Cloudy' }
+    ]
+  },
+  'santorini': {
+    current: {
+      temp: 25,
+      feels_like: 27,
+      humidity: 55,
+      description: 'Sunny'
+    },
+    forecast: [
+      { day: 'Today', temp: 25, description: 'Sunny' },
+      { day: 'Tomorrow', temp: 26, description: 'Clear Sky' },
+      { day: 'Day 3', temp: 24, description: 'Partly Cloudy' }
+    ]
+  }
+};
+
 // Real destination data for popular cities
 const DESTINATION_DATA = {
   'bali': {
@@ -200,73 +282,64 @@ export const getWeatherData = async (destination) => {
     // Normalize destination name for better matching
     const normalizedDestination = destination?.toLowerCase().replace(/[^a-z]/g, '');
     
-    // Map common variations to our data keys
-    const destinationMap = {
-      'bali': 'bali',
-      'indonesia': 'bali',
-      'balindonesia': 'bali',
-      'tokyo': 'tokyo',
-      'japan': 'tokyo',
-      'tokyojapan': 'tokyo',
-      'paris': 'paris',
-      'france': 'paris',
-      'parisfrance': 'paris',
-      'newyork': 'newyork',
-      'usa': 'newyork',
-      'newyorkusa': 'newyork',
-      'iceland': 'iceland',
-      'santorini': 'santorini',
-      'greece': 'santorini',
-      'santorinigreece': 'santorini'
-    };
-    
-    const destKey = destinationMap[normalizedDestination] || normalizedDestination;
-    const destData = DESTINATION_DATA[destKey];
-    
-    if (!destData) {
-      console.warn(`Destination not found: ${destination}, using mock data`);
-      // Return mock data for unsupported destinations
-      return {
-        current: {
-          temp: Math.floor(Math.random() * 15) + 15,
-          feels_like: Math.floor(Math.random() * 15) + 15,
-          humidity: Math.floor(Math.random() * 30) + 50,
-          description: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][Math.floor(Math.random() * 4)],
-          icon: '01d'
-        },
-        forecast: [
-          { day: 'Today', temp: Math.floor(Math.random() * 15) + 15, description: 'Sunny' },
-          { day: 'Tomorrow', temp: Math.floor(Math.random() * 15) + 15, description: 'Partly Cloudy' },
-          { day: 'Day 3', temp: Math.floor(Math.random() * 15) + 15, description: 'Cloudy' },
-          { day: 'Day 4', temp: Math.floor(Math.random() * 15) + 15, description: 'Light Rain' },
-          { day: 'Day 5', temp: Math.floor(Math.random() * 15) + 15, description: 'Sunny' }
-        ]
-      };
+    // For demo purposes, use mock data instead of real API
+    // In production, you would use the real weather API
+    if (MOCK_WEATHER_DATA[normalizedDestination]) {
+      return MOCK_WEATHER_DATA[normalizedDestination];
     }
-
-    // For demo purposes, we'll use mock weather data
-    // In production, you would use the actual OpenWeatherMap API
-    const mockWeatherData = {
+    
+    // Fallback weather data
+    return {
       current: {
-        temp: Math.floor(Math.random() * 15) + 15, // 15-30°C
-        feels_like: Math.floor(Math.random() * 15) + 15,
-        humidity: Math.floor(Math.random() * 30) + 50, // 50-80%
-        description: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][Math.floor(Math.random() * 4)],
-        icon: '01d'
+        temp: 20,
+        feels_like: 22,
+        humidity: 65,
+        description: 'Partly Cloudy'
       },
       forecast: [
-        { day: 'Today', temp: Math.floor(Math.random() * 15) + 15, description: 'Sunny' },
-        { day: 'Tomorrow', temp: Math.floor(Math.random() * 15) + 15, description: 'Partly Cloudy' },
-        { day: 'Day 3', temp: Math.floor(Math.random() * 15) + 15, description: 'Cloudy' },
-        { day: 'Day 4', temp: Math.floor(Math.random() * 15) + 15, description: 'Light Rain' },
-        { day: 'Day 5', temp: Math.floor(Math.random() * 15) + 15, description: 'Sunny' }
+        { day: 'Today', temp: 20, description: 'Partly Cloudy' },
+        { day: 'Tomorrow', temp: 18, description: 'Cloudy' },
+        { day: 'Day 3', temp: 21, description: 'Sunny' }
       ]
     };
 
-    return mockWeatherData;
+    // Real API implementation (commented out for demo)
+    /*
+    const destinationData = getDestinationData(destination);
+    if (!destinationData?.coordinates) {
+      throw new Error('Destination coordinates not found');
+    }
+
+    const { lat, lon } = destinationData.coordinates;
+    const response = await fetch(
+      `${WEATHER_BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch weather data');
+    }
+    
+    const weatherData = await response.json();
+    return {
+      current: {
+        temp: Math.round(weatherData.main.temp),
+        feels_like: Math.round(weatherData.main.feels_like),
+        humidity: weatherData.main.humidity,
+        description: weatherData.weather[0].description
+      }
+    };
+    */
   } catch (error) {
     console.error('Error fetching weather data:', error);
-    return null;
+    // Return fallback data
+    return {
+      current: {
+        temp: 20,
+        feels_like: 22,
+        humidity: 65,
+        description: 'Partly Cloudy'
+      }
+    };
   }
 };
 
@@ -334,6 +407,17 @@ export const getDestinationData = (destination) => {
 
 // Generate realistic trip based on preferences and weather
 export const generateRealisticTrip = (destination, quizAnswers, budget, weatherData) => {
+  if (!destination) {
+    return {
+      destination: 'Unknown',
+      summary: 'No destination selected. Please start your trip planning from the home page.',
+      itinerary: [],
+      accommodation: [],
+      weather: weatherData || {},
+      budget: budget || 0,
+      quizAnswers: quizAnswers || {},
+    };
+  }
   const destData = getDestinationData(destination);
   if (!destData) {
     throw new Error('Unable to generate trip data for this destination');

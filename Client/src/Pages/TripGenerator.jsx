@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Calendar, Clock, DollarSign, Star, Download, Share2, Cloud, Sun, CloudRain, Bookmark } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Clock, DollarSign, Star, Download, Share2, Cloud, Sun, CloudRain, Bookmark, Globe } from 'lucide-react';
 import { toast } from "sonner";
 import { getWeatherData, generateRealisticTrip } from '../services/tripService';
 import { saveTrip } from '../services/tripStorage';
+import { getDestinationImage } from '../lib/utils';
 
 const TripGenerator = () => {
   const { destinationId } = useParams();
@@ -78,28 +79,53 @@ const TripGenerator = () => {
     }
   };
 
+  const bgImage = getDestinationImage(destination?.name) || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80';
+
+  if (!destination) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-900 via-emerald-800 to-teal-900 text-white">
+        <h2 className="text-2xl font-bold mb-4">No destination selected</h2>
+        <p className="mb-6">Please start your trip planning from the home page or destinations page.</p>
+        <Button onClick={() => navigate('/')} className="bg-gradient-to-r from-green-600 to-emerald-600">Go Home</Button>
+      </div>
+    );
+  }
+
   if (isGenerating) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+        {/* Background Image with Overlay */}
+        <div 
+          className="fixed inset-0 z-0"
+          style={{
+            backgroundImage: `url('${bgImage}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-gray-800/50 to-slate-900/60"></div>
+        </div>
+
+        <div className="max-w-md mx-auto text-center relative z-20">
           <div className="mb-8">
-            <div className="w-24 h-24 mx-auto mb-4 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            <div className="w-24 h-24 mx-auto mb-4 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+            <h2 className="text-2xl font-bold text-white mb-2">
               Creating Your Real-Time Trip
             </h2>
-            <p className="text-gray-600">
+            <p className="text-green-100">
               Our AI is fetching current weather and crafting a personalized itinerary for {destination?.name}
             </p>
           </div>
           
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+          <div className="w-full bg-white/20 rounded-full h-2 mb-4">
             <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 h-2 rounded-full transition-all duration-500"
               style={{ width: `${generationProgress}%` }}
             ></div>
           </div>
           
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-green-200">
             {Math.round(generationProgress)}% Complete
           </p>
         </div>
@@ -108,22 +134,35 @@ const TripGenerator = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url('${bgImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-gray-800/50 to-slate-900/60"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
             onClick={handleBack}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
+            className="flex items-center gap-2 text-white hover:text-green-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Budget
           </Button>
           
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-purple-600" />
-            <h1 className="text-xl font-semibold text-gray-800">
+            <Globe className="w-5 h-5 text-emerald-400" />
+            <h1 className="text-xl font-semibold text-white">
               Your Real-Time Trip to {destination?.name}
             </h1>
           </div>
@@ -133,7 +172,7 @@ const TripGenerator = () => {
               variant="outline"
               size="sm"
               onClick={handleDownload}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <Download className="w-4 h-4" />
               Download
@@ -142,7 +181,7 @@ const TripGenerator = () => {
               variant="outline"
               size="sm"
               onClick={handleShare}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <Share2 className="w-4 h-4" />
               Share
@@ -151,7 +190,7 @@ const TripGenerator = () => {
               variant="outline"
               size="sm"
               onClick={handleSave}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <Bookmark className="w-4 h-4" />
               Save
@@ -162,23 +201,23 @@ const TripGenerator = () => {
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Current Weather Banner */}
           {weatherData?.current && (
-            <Card className="shadow-lg border-0 bg-gradient-to-r from-blue-50 to-purple-50">
+            <Card className="shadow-lg border-0 bg-white/10 backdrop-blur-sm border-white/20">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     {getWeatherIcon(weatherData.current.description)}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-800">
+                      <h3 className="text-lg font-semibold text-white">
                         Current Weather in {destination?.name}
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-green-200">
                         {weatherData.current.description} • {weatherData.current.temp}°C • {weatherData.current.humidity}% humidity
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Feels like</p>
-                    <p className="text-xl font-bold text-gray-800">{weatherData.current.feels_like}°C</p>
+                    <p className="text-sm text-green-200">Feels like</p>
+                    <p className="text-xl font-bold text-white">{weatherData.current.feels_like}°C</p>
                   </div>
                 </div>
               </CardContent>
@@ -186,57 +225,45 @@ const TripGenerator = () => {
           )}
 
           {/* Trip Summary */}
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg border-0 bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-gray-800">
+              <CardTitle className="text-2xl font-bold text-white">
                 {tripData?.summary.title}
               </CardTitle>
-              <p className="text-gray-600">
+              <p className="text-green-200">
                 {tripData?.summary.description}
               </p>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                  <Calendar className="w-5 h-5 text-purple-600" />
+                <div className="flex items-center gap-3 p-3 bg-green-600/20 rounded-lg">
+                  <Calendar className="w-5 h-5 text-green-400" />
                   <div>
-                    <p className="text-sm text-gray-600">Duration</p>
-                    <p className="font-semibold">{tripData?.itinerary.length} Days</p>
+                    <p className="text-sm text-green-200">Duration</p>
+                    <p className="font-semibold text-white">{tripData?.summary.duration}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                  <DollarSign className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center gap-3 p-3 bg-emerald-600/20 rounded-lg">
+                  <DollarSign className="w-5 h-5 text-emerald-400" />
                   <div>
-                    <p className="text-sm text-gray-600">Total Budget</p>
-                    <p className="font-semibold">₹{tripData?.budget.total?.toLocaleString()}</p>
+                    <p className="text-sm text-green-200">Budget</p>
+                    <p className="font-semibold text-white">₹{tripData?.summary.budget?.toLocaleString()}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                  <Star className="w-5 h-5 text-green-600" />
+                <div className="flex items-center gap-3 p-3 bg-teal-600/20 rounded-lg">
+                  <Star className="w-5 h-5 text-teal-400" />
                   <div>
-                    <p className="text-sm text-gray-600">Travel Style</p>
-                    <p className="font-semibold capitalize">{tripData?.quizAnswers[0]}</p>
+                    <p className="text-sm text-green-200">Rating</p>
+                    <p className="font-semibold text-white">{tripData?.summary.rating}/5</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                  <Clock className="w-5 h-5 text-orange-600" />
+                <div className="flex items-center gap-3 p-3 bg-yellow-600/20 rounded-lg">
+                  <Clock className="w-5 h-5 text-yellow-400" />
                   <div>
-                    <p className="text-sm text-gray-600">Generated</p>
-                    <p className="font-semibold">Just Now</p>
+                    <p className="text-sm text-green-200">Best Time</p>
+                    <p className="font-semibold text-white">{tripData?.summary.bestTime}</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-800">Trip Highlights:</h4>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {tripData?.summary.highlights.map((highlight, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                      {highlight}
-                    </li>
-                  ))}
-                </ul>
               </div>
             </CardContent>
           </Card>

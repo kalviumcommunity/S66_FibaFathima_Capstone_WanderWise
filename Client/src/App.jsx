@@ -1,14 +1,8 @@
-<<<<<<< Updated upstream
-import { useState } from 'react'
-
-import './App.css'
-=======
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
->>>>>>> Stashed changes
 
 import Index from "./Pages/Index";
 import Login from "./Pages/Login";
@@ -21,22 +15,12 @@ import Destinations from "./Pages/Destinations";
 
 const queryClient = new QueryClient();
 
-<<<<<<< Updated upstream
-  return (
-    <>
-    <h1>Welcome to my capstone</h1>
-     
-    </>
-  )
-}
-=======
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
         <Toaster position="top-right" richColors />
 
-        {/* Removed <BrowserRouter> */}
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
@@ -51,6 +35,5 @@ const App = () => (
     </AuthProvider>
   </QueryClientProvider>
 );
->>>>>>> Stashed changes
 
 export default App;
