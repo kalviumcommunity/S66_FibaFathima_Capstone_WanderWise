@@ -1,3 +1,3 @@
 [build]
-  publish = "dist"
+  publish = "Client/dist"
   command = "npm install && npm run build" 
