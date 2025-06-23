@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent } from "@/Components/ui/card";
 import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart, HeartOff, DollarSign, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

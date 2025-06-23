@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { ArrowLeft, MapPin, Calendar, Clock, DollarSign, Star, Download, Share2, Cloud, Sun, CloudRain, Bookmark, Globe } from 'lucide-react';
 import { toast } from "sonner";
 import { getWeatherData, generateRealisticTrip } from '../services/tripService';
