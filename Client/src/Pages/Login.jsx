@@ -5,8 +5,9 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Eye, EyeOff, Mail, Lock, Globe } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Globe, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,10 +24,13 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      await login({ email, password });
+      toast.success('Login successful!');
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Failed to login. Please check your credentials.');
+      const errorMessage = err.message || 'Failed to login. Please check your credentials.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -84,6 +88,7 @@ const Login = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 bg-white/20 border-white/30 text-white placeholder-green-200 focus:ring-green-400"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -100,11 +105,13 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 pr-10 bg-white/20 border-white/30 text-white placeholder-green-200 focus:ring-green-400"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-3 text-green-400 hover:text-green-200"
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -116,7 +123,14 @@ const Login = () => {
                 className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
 
@@ -140,7 +154,11 @@ const Login = () => {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <Button variant="outline" className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30">
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30"
+                  disabled={isLoading}
+                >
                   <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -161,7 +179,11 @@ const Login = () => {
                   </svg>
                   Google
                 </Button>
-                <Button variant="outline" className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30">
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30"
+                  disabled={isLoading}
+                >
                   <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                   </svg>

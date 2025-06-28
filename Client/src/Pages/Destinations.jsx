@@ -15,154 +15,57 @@ import {
   Plane,
   ArrowLeft,
   Globe,
-  HeartOff
+  HeartOff,
+  Loader2
 } from 'lucide-react';
-import { getDestinationImage } from '../lib/utils';
+import { destinationService } from '../services/destinationService';
+import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
   const [filteredDestinations, setFilteredDestinations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedBudget, setSelectedBudget] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState('all');
+  const [selectedSort, setSelectedSort] = useState('name');
+  const [loading, setLoading] = useState(true);
+  const [savingDestination, setSavingDestination] = useState(null);
+  const [countries, setCountries] = useState([]);
+  
+  const { user, isLoggedIn, saveDestination, removeDestination } = useAuth();
 
-  const categories = [
-    { id: 'all', name: 'All Destinations' },
-    { id: 'beach', name: 'Beach & Coastal' },
-    { id: 'mountain', name: 'Mountains & Nature' },
-    { id: 'city', name: 'Cities & Culture' },
-    { id: 'adventure', name: 'Adventure & Sports' },
-    { id: 'relaxation', name: 'Relaxation & Wellness' }
+  const sortOptions = [
+    { value: 'name', label: 'Name A-Z' },
+    { value: 'rating', label: 'Highest Rated' },
+    { value: 'popular', label: 'Most Popular' }
   ];
 
-  const budgetRanges = [
-    { id: 'all', name: 'All Budgets' },
-    { id: 'budget', name: 'Budget ($500-$1500)' },
-    { id: 'mid', name: 'Mid-range ($1500-$3000)' },
-    { id: 'luxury', name: 'Luxury ($3000+)' }
-  ];
-
+  // Fetch destinations from API
   useEffect(() => {
-    // Mock data - replace with actual API call
-    const mockDestinations = [
-      {
-        id: 1,
-        name: 'Paris, France',
-        country: 'France',
-        category: 'city',
-        budget: 'mid',
-        rating: 4.8,
-        reviews: 1247,
-        image: 'https://images.unsplash.com/photo-1502602898534-47d3c0c8705b?w=400',
-        description: 'The City of Light offers iconic landmarks, world-class museums, and unforgettable cuisine.',
-        price: 2500,
-        duration: '5-7 days',
-        highlights: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame', 'Champs-Élysées']
-      },
-      {
-        id: 2,
-        name: 'Bali, Indonesia',
-        country: 'Indonesia',
-        category: 'beach',
-        budget: 'budget',
-        rating: 4.6,
-        reviews: 892,
-        image: 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400',
-        description: 'Tropical paradise with stunning beaches, ancient temples, and vibrant culture.',
-        price: 1200,
-        duration: '7-10 days',
-        highlights: ['Ubud Sacred Monkey Forest', 'Tanah Lot Temple', 'Rice Terraces', 'Beach Clubs']
-      },
-      {
-        id: 3,
-        name: 'Tokyo, Japan',
-        country: 'Japan',
-        category: 'city',
-        budget: 'mid',
-        rating: 4.7,
-        reviews: 1034,
-        image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
-        description: 'A fascinating blend of ultramodern and traditional, offering endless discoveries.',
-        price: 2800,
-        duration: '6-8 days',
-        highlights: ['Shibuya Crossing', 'Senso-ji Temple', 'Tokyo Skytree', 'Tsukiji Market']
-      },
-      {
-        id: 4,
-        name: 'New York, USA',
-        country: 'United States',
-        category: 'city',
-        budget: 'mid',
-        rating: 4.5,
-        reviews: 1567,
-        image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400',
-        description: 'The Big Apple offers world-famous attractions, diverse neighborhoods, and endless entertainment.',
-        price: 2200,
-        duration: '5-7 days',
-        highlights: ['Times Square', 'Central Park', 'Statue of Liberty', 'Broadway']
-      },
-      {
-        id: 5,
-        name: 'Swiss Alps',
-        country: 'Switzerland',
-        category: 'mountain',
-        budget: 'luxury',
-        rating: 4.9,
-        reviews: 678,
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400',
-        description: 'Breathtaking mountain landscapes perfect for skiing, hiking, and outdoor adventures.',
-        price: 4500,
-        duration: '7-10 days',
-        highlights: ['Zermatt', 'Interlaken', 'Jungfraujoch', 'Lake Geneva']
-      },
-      {
-        id: 6,
-        name: 'Santorini, Greece',
-        country: 'Greece',
-        category: 'beach',
-        budget: 'mid',
-        rating: 4.8,
-        reviews: 945,
-        image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400',
-        description: 'Stunning sunsets, white-washed buildings, and crystal-clear waters await.',
-        price: 2000,
-        duration: '5-7 days',
-        highlights: ['Oia Sunset', 'Fira Town', 'Red Beach', 'Wine Tasting']
-      },
-      {
-        id: 7,
-        name: 'Machu Picchu',
-        country: 'Peru',
-        category: 'adventure',
-        budget: 'mid',
-        rating: 4.7,
-        reviews: 723,
-        image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=400',
-        description: 'Ancient Incan citadel set high in the Andes Mountains.',
-        price: 1800,
-        duration: '4-6 days',
-        highlights: ['Inca Trail', 'Sacred Valley', 'Cusco', 'Rainbow Mountain']
-      },
-      {
-        id: 8,
-        name: 'Maldives',
-        country: 'Maldives',
-        category: 'beach',
-        budget: 'luxury',
-        rating: 4.9,
-        reviews: 456,
-        image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400',
-        description: 'Overwater bungalows, pristine beaches, and world-class diving.',
-        price: 5000,
-        duration: '7-10 days',
-        highlights: ['Overwater Villas', 'Snorkeling', 'Spa Treatments', 'Island Hopping']
+    const fetchDestinations = async () => {
+      try {
+        setLoading(true);
+        const data = await destinationService.getDestinations({
+          sort: selectedSort
+        });
+        setDestinations(data);
+        setFilteredDestinations(data);
+        
+        // Extract unique countries for filter
+        const uniqueCountries = [...new Set(data.map(dest => dest.country))].sort();
+        setCountries(uniqueCountries);
+      } catch (error) {
+        console.error('Failed to fetch destinations:', error);
+        toast.error('Failed to load destinations');
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    setDestinations(mockDestinations);
-    setFilteredDestinations(mockDestinations);
-  }, []);
+    fetchDestinations();
+  }, [selectedSort]);
 
+  // Filter destinations based on search and country
   useEffect(() => {
     let filtered = destinations;
 
@@ -175,222 +78,232 @@ const Destinations = () => {
       );
     }
 
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(dest => dest.category === selectedCategory);
-    }
-
-    // Filter by budget
-    if (selectedBudget !== 'all') {
-      filtered = filtered.filter(dest => dest.budget === selectedBudget);
+    // Filter by country
+    if (selectedCountry !== 'all') {
+      filtered = filtered.filter(dest => dest.country === selectedCountry);
     }
 
     setFilteredDestinations(filtered);
-  }, [destinations, searchTerm, selectedCategory, selectedBudget]);
+  }, [destinations, searchTerm, selectedCountry]);
 
-  const getBudgetColor = (budget) => {
-    switch (budget) {
-      case 'budget': return 'bg-green-600 text-white';
-      case 'mid': return 'bg-yellow-600 text-white';
-      case 'luxury': return 'bg-purple-600 text-white';
-      default: return 'bg-gray-600 text-white';
+  // Handle save/unsave destination
+  const handleSaveDestination = async (destinationId, isSaved) => {
+    if (!isLoggedIn) {
+      toast.error('Please login to save destinations');
+      return;
+    }
+
+    try {
+      setSavingDestination(destinationId);
+      
+      if (isSaved) {
+        await removeDestination(destinationId);
+        toast.success('Destination removed from saved list');
+      } else {
+        await saveDestination(destinationId);
+        toast.success('Destination saved to your list');
+      }
+    } catch (error) {
+      console.error('Failed to save/unsave destination:', error);
+      toast.error('Failed to update saved destinations');
+    } finally {
+      setSavingDestination(null);
     }
   };
 
-  return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-gray-800/50 to-slate-900/60"></div>
-      </div>
+  // Check if destination is saved by current user
+  const isDestinationSaved = (destinationId) => {
+    return user?.savedDestinations?.includes(destinationId) || false;
+  };
 
+  // Get destination image
+  const getDestinationImage = (destination) => {
+    if (destination.images && destination.images.length > 0) {
+      return destination.images[0];
+    }
+    // Fallback to a default image
+    return 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400';
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Loading destinations...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/dashboard">
-                <Button variant="ghost" className="text-white hover:text-green-200">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
+              <Link to="/" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="h-5 w-5" />
+                <span>Back to Home</span>
               </Link>
-              <div className="flex items-center space-x-2">
-                <Globe className="h-8 w-8 text-emerald-400" />
-                <h1 className="text-xl font-semibold text-white">Explore Destinations</h1>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Explore Destinations</h1>
+                <p className="text-gray-600 mt-1">Discover amazing places around the world</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Plane className="h-5 w-5 text-green-400" />
-              <span className="text-white text-sm">WanderWise</span>
-            </div>
+            {isLoggedIn && (
+              <Link to="/dashboard">
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <Globe className="h-4 w-4" />
+                  <span>My Dashboard</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
-        {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">
-              Discover Your Next Adventure
-            </h1>
-            <p className="text-green-100 text-lg drop-shadow-md max-w-2xl mx-auto">
-              Explore amazing destinations and find the perfect trip for your budget and preferences
-            </p>
-          </div>
-          
-          {/* Search Bar */}
-          <div className="relative mb-6 max-w-2xl mx-auto">
-            <Search className="h-4 w-4 text-emerald-400" />
-            <Input
-              placeholder="Search destinations, countries, or activities..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/20 border-white/30 text-white placeholder-green-200 focus:ring-green-400"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap gap-4 mb-6 justify-center">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-green-400" />
-              <span className="text-sm font-medium text-white">Category:</span>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="text-sm border border-white/30 rounded-md px-3 py-1 bg-white/20 text-white focus:ring-green-400"
-              >
-                {categories.map(category => (
-                  <option key={category.id} value={category.id} className="bg-gray-800">
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+      {/* Filters */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Search destinations..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
 
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-4 w-4 text-green-400" />
-              <span className="text-sm font-medium text-white">Budget:</span>
-              <select
-                value={selectedBudget}
-                onChange={(e) => setSelectedBudget(e.target.value)}
-                className="text-sm border border-white/30 rounded-md px-3 py-1 bg-white/20 text-white focus:ring-green-400"
-              >
-                {budgetRanges.map(budget => (
-                  <option key={budget.id} value={budget.id} className="bg-gray-800">
-                    {budget.name}
-                  </option>
-                ))}
-              </select>
+            {/* Country Filter */}
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Countries</option>
+              {countries.map(country => (
+                <option key={country} value={country}>{country}</option>
+              ))}
+            </select>
+
+            {/* Sort */}
+            <select
+              value={selectedSort}
+              onChange={(e) => setSelectedSort(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {sortOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+
+            {/* Results Count */}
+            <div className="flex items-center justify-end text-sm text-gray-600">
+              {filteredDestinations.length} destination{filteredDestinations.length !== 1 ? 's' : ''} found
             </div>
           </div>
-
-          <p className="text-green-100 text-center">
-            Showing {filteredDestinations.length} of {destinations.length} destinations
-          </p>
         </div>
 
         {/* Destinations Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDestinations.map((destination) => (
-            <Card key={destination.id} className="relative overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer group bg-transparent border-white/20">
-              {/* Background Image */}
-              <div 
-                className="absolute inset-0 z-0"
-                style={{
-                  backgroundImage: `url('${destination.image}')`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-              </div>
-
-              {/* Content */}
-              <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-                {/* Header */}
-                <div>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-1">{destination.name}</h3>
-                      <p className="text-green-200 text-sm">{destination.country}</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium text-white">{destination.rating}</span>
-                      <span className="text-sm text-green-200">({destination.reviews})</span>
-                    </div>
-                  </div>
-
-                  <p className="text-green-100 text-sm mb-4 line-clamp-2">
-                    {destination.description}
-                  </p>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4 text-sm text-green-200">
-                      <div className="flex items-center space-x-1">
-                        <DollarSign className="h-4 w-4" />
-                        <span>${destination.price.toLocaleString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{destination.duration}</span>
-                      </div>
-                    </div>
-                    <Badge className={getBudgetColor(destination.budget)}>
-                      {destination.budget.charAt(0).toUpperCase() + destination.budget.slice(1)}
-                    </Badge>
-                  </div>
-
-                  <div className="mb-4">
-                    <p className="text-sm font-medium text-green-200 mb-2">Highlights:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {destination.highlights.slice(0, 3).map((highlight, index) => (
-                        <Badge key={index} variant="outline" className="text-xs bg-white/20 border-white/30 text-white">
-                          {highlight}
-                        </Badge>
-                      ))}
-                      {destination.highlights.length > 3 && (
-                        <Badge variant="outline" className="text-xs bg-white/20 border-white/30 text-white">
-                          +{destination.highlights.length - 3} more
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-2 mt-auto">
-                  <Link to={`/quiz/${destination.id}`} className="flex-1">
-                    <Button variant="outline" className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30">
-                      Take Quiz
-                    </Button>
-                  </Link>
-                  <Link to={`/budget/${destination.id}`} className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                      Plan Budget
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {filteredDestinations.length === 0 && (
+        {filteredDestinations.length === 0 ? (
           <div className="text-center py-12">
-            <MapPin className="h-12 w-12 text-green-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">No destinations found</h3>
-            <p className="text-green-200">Try adjusting your search or filters</p>
+            <Globe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No destinations found</h3>
+            <p className="text-gray-600">Try adjusting your search criteria</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredDestinations.map((destination) => {
+              const isSaved = isDestinationSaved(destination._id);
+              
+              return (
+                <Card key={destination._id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <div className="relative">
+                    <img
+                      src={getDestinationImage(destination)}
+                      alt={destination.name}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className={`rounded-full p-2 ${
+                          isSaved ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/80 hover:bg-white'
+                        }`}
+                        onClick={() => handleSaveDestination(destination._id, isSaved)}
+                        disabled={savingDestination === destination._id}
+                      >
+                        {savingDestination === destination._id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : isSaved ? (
+                          <Heart className="h-4 w-4 fill-current" />
+                        ) : (
+                          <Heart className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    {destination.isPopular && (
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-orange-500 text-white">Popular</Badge>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
+                          {destination.name}
+                        </CardTitle>
+                        <div className="flex items-center text-sm text-gray-600 mb-2">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {destination.country}
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium">{destination.rating?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {destination.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        {destination.price > 0 && (
+                          <div className="flex items-center text-sm text-gray-600">
+                            <DollarSign className="h-4 w-4 mr-1" />
+                            <span>From ${destination.price}</span>
+                          </div>
+                        )}
+                        {destination.bestSeason && (
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            <span>{destination.bestSeason}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <Link to={`/destination/${destination._id}`}>
+                        <Button size="sm" className="flex items-center space-x-1">
+                          <Plane className="h-4 w-4" />
+                          <span>Explore</span>
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>
