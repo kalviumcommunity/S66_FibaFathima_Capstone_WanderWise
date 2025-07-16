@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { TooltipProvider } from "@/Components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 
 // Pages
@@ -12,6 +12,7 @@ import Destinations from './Pages/Destinations';
 import BudgetPlanner from './Pages/BudgetPlanner';
 import Quiz from './Pages/Quiz';
 import TripGenerator from './Pages/TripGenerator';
+import About from './Pages/About';
 
 // Styles
 import './App.css';
@@ -31,6 +32,7 @@ function App() {
               <Route path="/budget-planner" element={<BudgetPlanner />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/trip-generator" element={<TripGenerator />} />
+              <Route path="/about" element={<About />} />
             </Routes>
             <Toaster 
               position="top-right"

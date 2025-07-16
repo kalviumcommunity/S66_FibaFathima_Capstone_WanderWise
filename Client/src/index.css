@@ -1,6 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Optional: Your own animations */
+/* Base color variables for WanderWise */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -52,7 +54,7 @@
   }
 }
 
-/* Custom animations for WanderWise */
+/* Custom animations */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -116,7 +118,7 @@
   background-clip: text;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }

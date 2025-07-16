@@ -114,6 +114,13 @@ const Index = () => {
             </h1>
           </div>
           <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/about')}
+              className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
+            >
+              About
+            </Button>
             {!isLoggedIn ? (
               <>
                 <Button 
