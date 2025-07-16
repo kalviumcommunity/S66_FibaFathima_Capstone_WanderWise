@@ -4,6 +4,4 @@
 
 [build.environment]
   NODE_VERSION = "20"
-
-[build.rollupOptions]
-  external = ["react-hot-toast"] 
+  NPM_VERSION = "9" 
