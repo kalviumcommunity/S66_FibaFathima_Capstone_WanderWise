@@ -1,15 +1,6 @@
-
-
-import { Toaster } from "sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { TooltipProvider } from "@/Components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 
 // Pages
@@ -26,16 +17,8 @@ import About from './Pages/About';
 // Styles
 import './App.css';
 
-
-const queryClient = new QueryClient();
-
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-=======
 function App() {
   return (
-
     <AuthProvider>
       <TooltipProvider>
         <Router>
@@ -79,13 +62,7 @@ function App() {
         </Router>
       </TooltipProvider>
     </AuthProvider>
-
-  </QueryClientProvider>
-);
-
-
   );
 }
-
 
 export default App;
