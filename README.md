@@ -3,6 +3,7 @@
 ### Frontend Deployed Link
     https://wanderwiseca.netlify.app/
 
+
 #### Backend Deployed Link
     https://s66-fibafathima-capstone-wanderwise.onrender.com/
 
@@ -57,37 +58,4 @@ WanderWise is an intelligent travel planning platform that helps users discover 
 
 
 
-
-#### Development Plan (April 10 - April 30)
-
-- Week 1: April 10 - April 16 (Backend Setup)
-    - Day 1: Initialize GitHub repo & backend (Node.js, Express, MongoDB)
-    - Day 2: Implement user authentication (signup/login with JWT)
-    - Day 3: Create models for users, trips, and experiences
-    - Day 4: Develop API for destinations and quiz answers
-    - Day 5: Create trip plan generation logic (based on quiz)
-    - Day 6: Build API for journaling and reflections
-    - Day 7: Test all backend endpoints using Postman/Bruno
-
-
-
-- Week 2: April 17 - April 23 (Frontend Development)
-    - Day 8: Set up React app with Tailwind, folder structure
-    - Day 9: Build Login/Signup UI and connect to backend
-    - Day 10: Create homepage with destination grid
-    - Day 11: Implement quiz UI per destination
-    - Day 12: Display generated trip plan in minimal itinerary UI
-    - Day 13: Create experience discovery section per city
-    - Day 14: Integrate journal entry and mood tracker UI
-
-
-
-
-- Week 3: April 24 - April 30 (Final Touches & Deployment)
-    - Day 15: Implement memory timeline & photo upload
-    - Day 17: Final UI polishing with Tailwind & animations
-    - Day 18: Full flow testing (login → plan → reflect)
-    - Day 19: Debugging backend issues
-    - Day 20: Debugging frontend issues & final testing
-    - Day 21: Deploy frontend to Netlify and backend to Render
 
