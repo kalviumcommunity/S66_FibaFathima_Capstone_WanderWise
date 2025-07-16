@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
-=======
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { TooltipProvider } from "@/Components/ui/tooltip";
@@ -22,12 +22,11 @@ import BudgetPlanner from './Pages/BudgetPlanner';
 import Quiz from './Pages/Quiz';
 import TripGenerator from './Pages/TripGenerator';
 import About from './Pages/About';
->>>>>>> final-wanderwise
 
 // Styles
 import './App.css';
 
-<<<<<<< HEAD
+
 const queryClient = new QueryClient();
 
 
@@ -36,7 +35,7 @@ const App = () => (
 =======
 function App() {
   return (
->>>>>>> final-wanderwise
+
     <AuthProvider>
       <TooltipProvider>
         <Router>
@@ -80,13 +79,13 @@ function App() {
         </Router>
       </TooltipProvider>
     </AuthProvider>
-<<<<<<< HEAD
+
   </QueryClientProvider>
 );
 
-=======
+
   );
 }
->>>>>>> final-wanderwise
+
 
 export default App;
