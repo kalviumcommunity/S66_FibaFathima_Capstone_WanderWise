@@ -567,3 +567,11 @@ const generateLocalTips = (destination, travelStyle, weatherData) => {
 
   return tips;
 }; 
+
+// Placeholder tripService for Dashboard.jsx
+export const tripService = {
+  async getTripsByUser(userId) {
+    // TODO: Replace with real API call
+    return [];
+  }
+}; 
