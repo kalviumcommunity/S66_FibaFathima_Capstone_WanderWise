@@ -19,6 +19,8 @@ import {
   Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { tripService } from '../services/tripService';
+import { userService } from '../services/userService';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -31,41 +33,15 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    // Mock data - replace with actual API calls
-    setRecentTrips([
-      {
-        id: 1,
-        destination: 'Paris, France',
-        date: '2024-06-15',
-        status: 'upcoming',
-        budget: 2500,
-        image: 'https://images.unsplash.com/photo-1502602898534-47d3c0c8705b?w=400'
-      },
-      {
-        id: 2,
-        destination: 'Tokyo, Japan',
-        date: '2024-03-20',
-        status: 'completed',
-        budget: 3200,
-        image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400'
-      },
-      {
-        id: 3,
-        destination: 'New York, USA',
-        date: '2024-01-10',
-        status: 'completed',
-        budget: 1800,
-        image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400'
-      }
-    ]);
-
-    setStats({
-      totalTrips: 8,
-      totalSpent: 15600,
-      upcomingTrips: 2,
-      favoriteDestinations: 5
-    });
-  }, []);
+    // Fetch recent trips
+    tripService.getTripsByUser(user?._id)
+      .then(setRecentTrips)
+      .catch(console.error);
+    // Fetch stats
+    userService.getUserStats(user?._id)
+      .then(setStats)
+      .catch(console.error);
+  }, [user]);
 
   const handleLogout = () => {
     logout();

@@ -19,11 +19,13 @@ import {
   Star
 } from 'lucide-react';
 import { getDestinationImage } from '../lib/utils';
+import { destinationService } from '../services/destinationService';
 
 const BudgetPlanner = () => {
   const { destinationId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [destination, setDestination] = useState(null);
   
   const [budget, setBudget] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState('INR');
@@ -83,7 +85,13 @@ const BudgetPlanner = () => {
     SAR: 0.045
   };
 
-  const destination = location.state?.destination;
+  useEffect(() => {
+    if (destinationId) {
+      destinationService.getDestinationById(destinationId)
+        .then(setDestination)
+        .catch(console.error);
+    }
+  }, [destinationId]);
 
   useEffect(() => {
     if (budget && selectedCurrency) {

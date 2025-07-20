@@ -1,20 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { ArrowLeft, ArrowRight, MapPin, Compass } from 'lucide-react';
 import { toast } from "sonner";
 import { getDestinationImage } from '../lib/utils';
+import { destinationService } from '../services/destinationService';
 
 const Quiz = () => {
   const { destinationId } = useParams();
   const location = useLocation();
-  const destination = location.state?.destination;
+  const [destination, setDestination] = useState(location.state?.destination || null);
   const navigate = useNavigate();
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!destination && destinationId) {
+      destinationService.getDestinationById(destinationId)
+        .then(setDestination)
+        .catch(console.error);
+    }
+  }, [destination, destinationId]);
 
   const questions = [
     {

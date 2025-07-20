@@ -1,72 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
 import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart, HeartOff, DollarSign, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const destinations = [
-  {
-    id: 1,
-    name: "Bali, Indonesia",
-    image: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1",
-    description: "Tropical paradise with stunning beaches and rich culture",
-    rating: 4.8,
-    popular: true
-  },
-  {
-    id: 2,
-    name: "Tokyo, Japan",
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf",
-    description: "Modern metropolis blending tradition and innovation",
-    rating: 4.9,
-    popular: true
-  },
-  {
-    id: 3,
-    name: "Paris, France",
-    image: "https://images.unsplash.com/photo-1502602898536-47ad22581b52",
-    description: "City of love, art, and culinary excellence",
-    rating: 4.7,
-    popular: false
-  },
-  {
-    id: 4,
-    name: "New York, USA",
-    image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9",
-    description: "The city that never sleeps, full of energy and dreams",
-    rating: 4.6,
-    popular: false
-  },
-  {
-    id: 5,
-    name: "Iceland",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-    description: "Land of fire and ice with breathtaking landscapes",
-    rating: 4.9,
-    popular: true
-  },
-  {
-    id: 6,
-    name: "Santorini, Greece",
-    image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff",
-    description: "Stunning sunsets and white-washed buildings",
-    rating: 4.8,
-    popular: false
-  }
-];
+import { destinationService } from '../services/destinationService';
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [wishlist, setWishlist] = useState([]);
+  const [destinations, setDestinations] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    destinationService.getDestinations()
+      .then(setDestinations)
+      .catch(console.error);
+  }, []);
 
   const handleDestinationClick = (destination) => {
     if (!isLoggedIn) {
       navigate('/login');
       return;
     }
-    navigate(`/quiz/${destination.id}`, { state: { destination } });
+    navigate(`/quiz/${destination._id || destination.id}`, { state: { destination } });
   };
 
   const toggleWishlist = (destinationId) => {
@@ -256,7 +213,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDestinations.map((destination, index) => (
                 <Card 
-                  key={destination.id}
+                  key={destination._id || destination.id}
                   className="group cursor-pointer hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-green-50 to-emerald-50 backdrop-blur-sm overflow-hidden hover:scale-105 animate-fade-in hover:from-green-100 hover:to-emerald-100"
                   style={{ animationDelay: `${index * 100}ms` }}
                   onClick={() => handleDestinationClick(destination)}
@@ -273,11 +230,11 @@ const Index = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleWishlist(destination.id);
+                        toggleWishlist(destination._id || destination.id);
                       }}
                       className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-300"
                     >
-                      {wishlist.includes(destination.id) ? (
+                      {wishlist.includes(destination._id || destination.id) ? (
                         <Heart className="w-4 h-4 text-red-500 fill-current" />
                       ) : (
                         <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
@@ -307,7 +264,7 @@ const Index = () => {
                         Plan Trip
                         <ArrowRight className="w-4 h-4 ml-1" />
                       </Button>
-                      {wishlist.includes(destination.id) && (
+                      {wishlist.includes(destination._id || destination.id) && (
                         <span className="text-xs text-green-600 font-medium">In Wishlist</span>
                       )}
                     </div>

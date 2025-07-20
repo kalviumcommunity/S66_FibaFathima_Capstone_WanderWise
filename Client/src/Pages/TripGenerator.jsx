@@ -7,11 +7,13 @@ import { toast } from "sonner";
 import { getWeatherData, generateRealisticTrip } from '../services/tripService';
 import { saveTrip } from '../services/tripStorage';
 import { getDestinationImage } from '../lib/utils';
+import { destinationService } from '../services/destinationService';
 
 const TripGenerator = () => {
   const { destinationId } = useParams();
   const location = useLocation();
-  const { destination, quizAnswers, budget } = location.state || {};
+  const [destination, setDestination] = useState(location.state?.destination || null);
+  const { quizAnswers, budget } = location.state || {};
   const navigate = useNavigate();
   
   const [isGenerating, setIsGenerating] = useState(true);
@@ -20,6 +22,14 @@ const TripGenerator = () => {
   const [weatherData, setWeatherData] = useState(null);
 
   // Real-time trip generation with weather data
+  useEffect(() => {
+    if (!destination && destinationId) {
+      destinationService.getDestinationById(destinationId)
+        .then(setDestination)
+        .catch(console.error);
+    }
+  }, [destination, destinationId]);
+
   useEffect(() => {
     const generateTrip = async () => {
       try {
