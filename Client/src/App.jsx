@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/Components/ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 
 // Pages
