@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { TooltipProvider } from "@/Components/ui/tooltip";
 import { Toaster } from 'react-hot-toast';
@@ -30,8 +30,7 @@ function App() {
   return (
     <AuthProvider>
       <TooltipProvider>
-        <Router>
-          <div className="App">
+        <div className="App">
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
@@ -78,8 +77,7 @@ function App() {
                 },
               }}
             />
-          </div>
-        </Router>
+        </div>
       </TooltipProvider>
     </AuthProvider>
   );
