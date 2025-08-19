@@ -217,6 +217,42 @@ router.delete('/users/:userId', authenticateToken, requireAdmin, async (req, res
 
 // ========== DESTINATION MANAGEMENT ==========
 
+// Admin create new destination
+router.post('/destinations', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { name, description, country, location, images, activities, bestSeason, popularAttractions, price } = req.body;
+
+    if (!name || !description || !country) {
+      return res.status(400).json({ message: 'Name, description, and country are required' });
+    }
+
+    const newDestination = new Destination({
+      name,
+      description,
+      country,
+      location,
+      images: images || [],
+      activities: activities || [],
+      bestSeason,
+      popularAttractions: popularAttractions || [],
+      price: price || 0,
+      addedBy: req.user._id,
+      isApproved: true, // auto-approved since admin created it
+      approvedBy: req.user._id,
+      approvalDate: new Date()
+    });
+
+    await newDestination.save();
+
+    res.status(201).json({
+      message: 'Destination created successfully by admin',
+      destination: newDestination
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create destination', error: error.message });
+  }
+});
+
 // Get all destinations with filters
 router.get('/destinations', authenticateToken, requireAdmin, async (req, res) => {
   try {
