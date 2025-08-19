@@ -109,6 +109,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLogin = async (credential) => {
+    try {
+      setLoading(true);
+      const response = await authService.googleLogin(credential);
+      setUser(response.user);
+      setIsLoggedIn(true);
+      authService.storeUser(response.user);
+      return response;
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const saveDestination = async (destinationId) => {
     try {
       const response = await authService.saveDestination(destinationId);
@@ -168,6 +183,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
+    googleLogin,
     updateProfile,
     changePassword,
     saveDestination,

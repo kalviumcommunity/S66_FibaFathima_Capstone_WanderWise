@@ -17,7 +17,7 @@ const JournalSchema = new mongoose.Schema({
         type: Date,
         required: true
       },
-      mood: {
+      title: {
         type: String,
         required: true
       },
@@ -25,9 +25,15 @@ const JournalSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      mood: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5
+      },
       photos: [
         {
-          type: String, 
+          type: String,
         }
       ]
     }

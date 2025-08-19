@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Globe, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
@@ -21,7 +22,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { signup, googleLogin } = useAuth();
 
   const handleInputChange = (e) => {
     setFormData({
@@ -32,7 +33,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords don't match. Please make sure your passwords match.");
       return;
@@ -40,31 +41,41 @@ const Signup = () => {
 
     setIsLoading(true);
 
-    // Simulate signup process
-    setTimeout(() => {
-      setIsLoading(false);
-      login({ 
-        email: formData.email, 
-        name: `${formData.firstName} ${formData.lastName}` 
+    try {
+      await signup({
+        username: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password
       });
       toast.success("Welcome to WanderWise! Your account has been created successfully.");
       navigate('/dashboard');
-    }, 1000);
+    } catch (error) {
+      toast.error(error.message || "Failed to create account. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleSignup = () => {
-    setIsGoogleLoading(true);
-    // Simulate Google signup
-    setTimeout(() => {
-      setIsGoogleLoading(false);
-      login({ email: 'google@example.com', name: 'Google User' });
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setIsGoogleLoading(true);
+      await googleLogin(credentialResponse.credential);
       toast.success("Welcome to WanderWise! You've signed up with Google successfully.");
       navigate('/dashboard');
-    }, 1000);
+    } catch (error) {
+      toast.error(error.message || "Google signup failed");
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google signup failed');
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
       {/* Background Image with Overlay */}
       <div 
         className="fixed inset-0 z-0"
@@ -126,21 +137,17 @@ const Signup = () => {
           </CardHeader>
           <CardContent>
             {/* Google Signup Button */}
-            <Button
-              onClick={handleGoogleSignup}
-              disabled={isGoogleLoading}
-              variant="outline"
-              className="w-full mb-6 flex items-center justify-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30"
-            >
-              {isGoogleLoading ? (
-                <div className="h-4 w-4 border-2 border-white/40 border-t-emerald-400 rounded-full animate-spin" />
-              ) : (
-                <svg className="w-4 h-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" fill="#4285F4"/>
-                </svg>
-              )}
-              Continue with Google
-            </Button>
+            <div className="w-full mb-6 flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                theme="filled_blue"
+                size="large"
+                text="signup_with"
+                shape="rectangular"
+                width="100%"
+              />
+            </div>
 
             <div className="relative mb-6">
               <div className="absolute inset-0 flex items-center">
@@ -262,6 +269,7 @@ const Signup = () => {
         </Card>
       </div>
     </div>
+    </GoogleOAuthProvider>
   );
 };
 

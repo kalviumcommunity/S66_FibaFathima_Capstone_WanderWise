@@ -8,6 +8,7 @@ const path = require('path');
 const authRoutes = require('./Routes/Auth');
 const destinationRoutes = require('./Routes/destination');
 const tripRoutes = require('./Routes/Trip');
+const journalRoutes = require('./Routes/journals');
 const adminRoutes = require('./Routes/admin');
 
 // Import database connection
@@ -24,7 +25,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: process.env.CLIENT_ORIGIN || process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -49,6 +50,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/trips', tripRoutes);
+app.use('/api/journals', journalRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Welcome endpoint
@@ -60,6 +62,7 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       destinations: '/api/destinations',
       trips: '/api/trips',
+      journals: '/api/journals',
       admin: '/api/admin'
     }
   });

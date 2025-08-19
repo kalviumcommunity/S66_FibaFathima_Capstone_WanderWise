@@ -21,12 +21,28 @@ class AuthService {
   async login(credentials) {
     try {
       const response = await apiService.post('/auth/login', credentials, false);
-      
+
       // Store token
       if (response.token) {
         apiService.setAuthToken(response.token);
       }
-      
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Google OAuth login
+  async googleLogin(credential) {
+    try {
+      const response = await apiService.post('/auth/google', { credential }, false);
+
+      // Store token
+      if (response.token) {
+        apiService.setAuthToken(response.token);
+      }
+
       return response;
     } catch (error) {
       throw error;
