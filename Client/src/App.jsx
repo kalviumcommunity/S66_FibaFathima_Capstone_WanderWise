@@ -21,7 +21,7 @@ import TripGenerator from './Pages/TripGenerator';
 import About from './Pages/About';
 
 // Components
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 // Styles
 import './App.css';
