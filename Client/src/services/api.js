@@ -7,15 +7,15 @@ class ApiService {
 
   // Helper method to get auth token
   getAuthToken() {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   // Helper method to set auth token
   setAuthToken(token) {
     if (token) {
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
     } else {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     }
   }
 

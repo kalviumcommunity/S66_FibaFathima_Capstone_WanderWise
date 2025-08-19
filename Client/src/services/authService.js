@@ -112,8 +112,12 @@ class AuthService {
   // Logout user
   logout() {
     apiService.setAuthToken(null);
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('isLoggedIn');
+    // Also clear localStorage for any existing data
     localStorage.removeItem('user');
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('token');
   }
 
   // Check if user is authenticated
@@ -123,14 +127,14 @@ class AuthService {
 
   // Get stored user data
   getStoredUser() {
-    const user = localStorage.getItem('user');
+    const user = sessionStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
   // Store user data
   storeUser(userData) {
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.setItem('user', JSON.stringify(userData));
+    sessionStorage.setItem('isLoggedIn', 'true');
   }
 }
 

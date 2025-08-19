@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
+import "./utils/clearStorage.js"; // Clear old localStorage data
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
