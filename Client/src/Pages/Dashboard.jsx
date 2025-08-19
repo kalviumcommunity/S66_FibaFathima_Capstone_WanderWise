@@ -19,8 +19,9 @@ import {
   Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { tripService } from '../services/tripService';
-import { userService } from '../services/userService';
+import { tripApiService } from '../services/tripApiService';
+import { getUserStats } from '../services/userService';
+
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -33,14 +34,34 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    // Fetch recent trips
-    tripService.getTripsByUser(user?._id)
-      .then(setRecentTrips)
-      .catch(console.error);
-    // Fetch stats
-    userService.getUserStats(user?._id)
-      .then(setStats)
-      .catch(console.error);
+    const fetchDashboardData = async () => {
+      try {
+        // Fetch recent trips using the API service
+        const trips = await tripApiService.getTrips();
+        setRecentTrips(trips.slice(0, 3)); // Show only recent 3 trips
+
+        // Fetch stats
+        const userStats = await getUserStats(user?._id);
+        setStats({
+          ...userStats,
+          totalTrips: trips.length,
+          upcomingTrips: trips.filter(trip => new Date(trip.startDate) > new Date()).length
+        });
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        // Set default stats if API fails
+        setStats({
+          totalTrips: 0,
+          totalSpent: 0,
+          upcomingTrips: 0,
+          favoriteDestinations: 0
+        });
+      }
+    };
+
+    if (user) {
+      fetchDashboardData();
+    }
   }, [user]);
 
   const handleLogout = () => {

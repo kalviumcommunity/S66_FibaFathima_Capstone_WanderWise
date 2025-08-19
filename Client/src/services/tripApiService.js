@@ -1,4 +1,4 @@
-import apiService from './api';
+import { apiService } from './api';
 
 class TripApiService {
   // Get all trips for the authenticated user

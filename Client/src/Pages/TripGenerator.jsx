@@ -6,7 +6,6 @@ import { ArrowLeft, MapPin, Calendar, Clock, DollarSign, Star, Download, Share2,
 import { toast } from "sonner";
 import { getWeatherData, generateRealisticTrip } from '../services/tripService';
 import { saveTrip } from '../services/tripStorage';
-import { getDestinationImage } from '../lib/utils';
 import { destinationService } from '../services/destinationService';
 
 const TripGenerator = () => {
@@ -89,7 +88,7 @@ const TripGenerator = () => {
     }
   };
 
-  const bgImage = getDestinationImage(destination?.name) || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80';
+  const bgImage = destination?.images?.[0] || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80';
 
   if (!destination) {
     return (

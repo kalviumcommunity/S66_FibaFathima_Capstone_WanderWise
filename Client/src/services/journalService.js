@@ -1,4 +1,4 @@
-import apiService from './api';
+import { apiService } from './api';
 
 class JournalService {
   // Get journal for a specific trip
