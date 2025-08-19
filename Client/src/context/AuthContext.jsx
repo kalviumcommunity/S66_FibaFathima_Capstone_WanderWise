@@ -20,6 +20,18 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        // Force logout on fresh page load (new session)
+        const isNewSession = !sessionStorage.getItem('session_active');
+
+        if (isNewSession) {
+          // This is a fresh browser session, force logout
+          authService.logout();
+          setUser(null);
+          setIsLoggedIn(false);
+          setLoading(false);
+          return;
+        }
+
         if (authService.isAuthenticated()) {
           const userData = await authService.getProfile();
           setUser(userData);
@@ -54,6 +66,8 @@ export const AuthProvider = ({ children }) => {
       setUser(response.user);
       setIsLoggedIn(true);
       authService.storeUser(response.user);
+      // Mark session as active after successful login
+      sessionStorage.setItem('session_active', 'true');
       return response;
     } catch (error) {
       throw error;
@@ -81,6 +95,8 @@ export const AuthProvider = ({ children }) => {
     authService.logout();
     setUser(null);
     setIsLoggedIn(false);
+    // Clear session marker
+    sessionStorage.removeItem('session_active');
   };
 
   const updateProfile = async (profileData) => {
@@ -116,6 +132,8 @@ export const AuthProvider = ({ children }) => {
       setUser(response.user);
       setIsLoggedIn(true);
       authService.storeUser(response.user);
+      // Mark session as active after successful login
+      sessionStorage.setItem('session_active', 'true');
       return response;
     } catch (error) {
       throw error;
