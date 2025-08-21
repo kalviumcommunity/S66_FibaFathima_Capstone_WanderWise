@@ -8,8 +8,10 @@ import { Badge } from "@/Components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import { Plus, Edit, Trash2, Users, MapPin, FileText, BarChart3, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { adminService } from '../services/adminService';
 import { destinationService } from '../services/destinationService';
 import { toast } from 'react-hot-toast';
+import AddDestinationForm from '../Components/AddDestinationForm';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddDestination, setShowAddDestination] = useState(false);
+  const [showAddDestinationForm, setShowAddDestinationForm] = useState(false);
   const [newDestination, setNewDestination] = useState({
     name: '',
     description: '',
@@ -27,7 +30,8 @@ const Admin = () => {
     images: '',
     activities: '',
     bestSeason: '',
-    popularAttractions: ''
+    popularAttractions: '',
+    price: 0
   });
 
   useEffect(() => {
@@ -39,30 +43,20 @@ const Admin = () => {
 
     const fetchAdminData = async () => {
       try {
-        // Fetch admin stats
-        const mockStats = {
-          totalUsers: 1250,
-          totalDestinations: 45,
-          totalTrips: 320,
-          totalJournals: 180,
-          newUsersThisMonth: 85,
-          pendingDestinations: 3
-        };
-        setStats(mockStats);
+        // Fetch admin dashboard stats
+        const dashboardData = await adminService.getDashboard();
+        setStats(dashboardData.stats);
 
         // Fetch destinations
-        const destinationsData = await destinationService.getDestinations();
-        setDestinations(destinationsData);
+        const destinationsData = await adminService.getDestinations();
+        setDestinations(destinationsData.destinations || []);
 
-        // Mock users data
-        const mockUsers = [
-          { id: '1', username: 'john_doe', email: 'john@example.com', role: 'user', isActive: true, createdAt: '2024-01-15' },
-          { id: '2', username: 'jane_smith', email: 'jane@example.com', role: 'user', isActive: true, createdAt: '2024-01-20' },
-          { id: '3', username: 'admin_user', email: 'admin@wanderwise.com', role: 'admin', isActive: true, createdAt: '2024-01-01' }
-        ];
-        setUsers(mockUsers);
+        // Fetch users
+        const usersData = await adminService.getUsers();
+        setUsers(usersData.users || []);
 
       } catch (error) {
+        console.error('Failed to load admin data:', error);
         toast.error('Failed to load admin data');
       } finally {
         setLoading(false);
@@ -71,6 +65,15 @@ const Admin = () => {
 
     fetchAdminData();
   }, [isAdmin, navigate]);
+
+  const refreshDestinations = async () => {
+    try {
+      const destinationsData = await adminService.getDestinations();
+      setDestinations(destinationsData.destinations || []);
+    } catch (error) {
+      console.error('Failed to refresh destinations:', error);
+    }
+  };
 
   const handleAddDestination = async () => {
     try {
@@ -83,14 +86,15 @@ const Admin = () => {
         ...newDestination,
         images: newDestination.images.split(',').map(img => img.trim()).filter(img => img),
         activities: newDestination.activities.split(',').map(act => act.trim()).filter(act => act),
-        popularAttractions: newDestination.popularAttractions.split(',').map(attr => attr.trim()).filter(attr => attr)
+        popularAttractions: newDestination.popularAttractions.split(',').map(attr => attr.trim()).filter(attr => attr),
+        price: parseFloat(newDestination.price) || 0
       };
 
-      await destinationService.createDestination(destinationData);
+      await adminService.createDestination(destinationData);
       
       // Refresh destinations list
-      const updatedDestinations = await destinationService.getDestinations();
-      setDestinations(updatedDestinations);
+      const updatedDestinations = await adminService.getDestinations();
+      setDestinations(updatedDestinations.destinations || []);
       
       setNewDestination({
         name: '',
@@ -100,7 +104,8 @@ const Admin = () => {
         images: '',
         activities: '',
         bestSeason: '',
-        popularAttractions: ''
+        popularAttractions: '',
+        price: 0
       });
       setShowAddDestination(false);
       
@@ -129,75 +134,96 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-0 w-80 h-80 bg-teal-200/25 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-cyan-200/20 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white/80 backdrop-blur-lg shadow-lg border-b border-emerald-100/50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/dashboard')}
-            className="mb-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Manage users, destinations, and platform content
-          </p>
+          <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-xl p-4 border border-emerald-200/30 mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/dashboard')}
+              className="mb-4 bg-white/50 hover:bg-white/70 transition-all duration-200"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-700/80">
+              Manage users, destinations, and platform content
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Stats Overview */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <Users className="h-8 w-8 text-blue-600" />
+            <Card className="bg-gradient-to-br from-blue-50/80 to-indigo-50/80 backdrop-blur-sm border border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-blue-400/10 rounded-full blur-xl"></div>
+                <div className="flex items-center relative z-10">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Users</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+                    <p className="text-sm font-medium text-blue-700/80">Total Users</p>
+                    <p className="text-2xl font-bold text-blue-900">{stats.users?.total || 0}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <MapPin className="h-8 w-8 text-emerald-600" />
+            <Card className="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 backdrop-blur-sm border border-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-400/10 rounded-full blur-xl"></div>
+                <div className="flex items-center relative z-10">
+                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                    <MapPin className="h-6 w-6 text-white" />
+                  </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Destinations</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.totalDestinations}</p>
+                    <p className="text-sm font-medium text-emerald-700/80">Destinations</p>
+                    <p className="text-2xl font-bold text-emerald-900">{stats.destinations?.total || 0}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <BarChart3 className="h-8 w-8 text-purple-600" />
+            <Card className="bg-gradient-to-br from-purple-50/80 to-violet-50/80 backdrop-blur-sm border border-purple-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-purple-400/10 rounded-full blur-xl"></div>
+                <div className="flex items-center relative z-10">
+                  <div className="p-3 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl shadow-lg">
+                    <BarChart3 className="h-6 w-6 text-white" />
+                  </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Trips</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.totalTrips}</p>
+                    <p className="text-sm font-medium text-purple-700/80">Total Trips</p>
+                    <p className="text-2xl font-bold text-purple-900">{stats.trips?.total || 0}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <FileText className="h-8 w-8 text-orange-600" />
+            <Card className="bg-gradient-to-br from-orange-50/80 to-amber-50/80 backdrop-blur-sm border border-orange-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-orange-400/10 rounded-full blur-xl"></div>
+                <div className="flex items-center relative z-10">
+                  <div className="p-3 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl shadow-lg">
+                    <FileText className="h-6 w-6 text-white" />
+                  </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Journals</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.totalJournals}</p>
+                    <p className="text-sm font-medium text-orange-700/80">Active Trips</p>
+                    <p className="text-2xl font-bold text-orange-900">{stats.trips?.active || 0}</p>
                   </div>
                 </div>
               </CardContent>
@@ -207,20 +233,42 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="destinations" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="destinations">Destinations</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          </TabsList>
+          <div className="bg-white/60 backdrop-blur-lg rounded-2xl p-2 border border-gray-200/50 shadow-lg">
+            <TabsList className="bg-transparent border-0 space-x-2">
+              <TabsTrigger
+                value="destinations"
+                className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-600 data-[state=active]:text-white border border-emerald-200/50 data-[state=active]:border-emerald-400 rounded-xl transition-all duration-300"
+              >
+                Destinations
+              </TabsTrigger>
+              <TabsTrigger
+                value="users"
+                className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white border border-blue-200/50 data-[state=active]:border-blue-400 rounded-xl transition-all duration-300"
+              >
+                Users
+              </TabsTrigger>
+              <TabsTrigger
+                value="analytics"
+                className="bg-gradient-to-r from-purple-500/10 to-violet-500/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-violet-600 data-[state=active]:text-white border border-purple-200/50 data-[state=active]:border-purple-400 rounded-xl transition-all duration-300"
+              >
+                Analytics
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Destinations Tab */}
           <TabsContent value="destinations" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">Manage Destinations</h2>
-              <Button onClick={() => setShowAddDestination(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Destination
-              </Button>
+            <div className="bg-gradient-to-r from-emerald-50/80 to-teal-50/80 backdrop-blur-sm rounded-2xl p-6 border border-emerald-200/50 shadow-lg">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent">Manage Destinations</h2>
+                <Button
+                  onClick={() => setShowAddDestinationForm(true)}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Destination
+                </Button>
+              </div>
             </div>
 
             {/* Add Destination Form */}
@@ -305,6 +353,16 @@ const Admin = () => {
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Price (USD)</label>
+                    <Input
+                      type="number"
+                      placeholder="1500"
+                      value={newDestination.price}
+                      onChange={(e) => setNewDestination({...newDestination, price: e.target.value})}
+                    />
+                  </div>
+
                   <div className="flex space-x-2">
                     <Button onClick={handleAddDestination}>
                       Add Destination
@@ -320,10 +378,11 @@ const Admin = () => {
             {/* Destinations List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {destinations.map((destination) => (
-                <Card key={destination._id}>
-                  <CardHeader>
+                <Card key={destination._id} className="bg-white/70 backdrop-blur-sm border border-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 rounded-full blur-2xl"></div>
+                  <CardHeader className="relative z-10">
                     <CardTitle className="flex items-center justify-between">
-                      <span className="truncate">{destination.name}</span>
+                      <span className="truncate text-emerald-800">{destination.name}</span>
                       <div className="flex space-x-1">
                         <Button variant="ghost" size="sm">
                           <Edit className="h-4 w-4" />
@@ -389,7 +448,7 @@ const Admin = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {users.map((user) => (
-                        <tr key={user.id}>
+                        <tr key={user._id}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div>
                               <div className="text-sm font-medium text-gray-900">{user.username}</div>
@@ -436,15 +495,15 @@ const Admin = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">New users this month</span>
-                      <span className="font-medium">{stats?.newUsersThisMonth}</span>
+                      <span className="font-medium">{stats?.users?.newThisMonth || 0}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Pending destinations</span>
-                      <span className="font-medium">{stats?.pendingDestinations}</span>
+                      <span className="font-medium">{stats?.destinations?.pending || 0}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Active trips</span>
-                      <span className="font-medium">45</span>
+                      <span className="font-medium">{stats?.trips?.active || 0}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -475,6 +534,14 @@ const Admin = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Add Destination Form Modal */}
+      {showAddDestinationForm && (
+        <AddDestinationForm
+          onClose={() => setShowAddDestinationForm(false)}
+          onDestinationAdded={refreshDestinations}
+        />
+      )}
     </div>
   );
 };

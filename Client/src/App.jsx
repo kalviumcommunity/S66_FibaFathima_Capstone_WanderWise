@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Pages
 import Index from './Pages/Index';
-import Login from './Pages/Login';
+import SimpleLogin from './Pages/SimpleLogin';
 import SignUp from './Pages/SignUp';
 import Dashboard from './Pages/Dashboard';
 import Destinations from './Pages/Destinations';
@@ -30,10 +30,10 @@ function App() {
   return (
     <AuthProvider>
       <TooltipProvider>
-        <div className="App">
-            <Routes>
+        <div className="App min-h-screen bg-white transition-colors duration-500">
+          <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<SimpleLogin />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/about" element={<About />} />
 

@@ -28,6 +28,16 @@ class DestinationService {
     }
   }
 
+  // Create new destination (admin only)
+  async createDestination(destinationData) {
+    try {
+      const response = await apiService.post('/destinations', destinationData, true); // Auth required
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Submit new destination (requires authentication)
   async submitDestination(destinationData) {
     try {

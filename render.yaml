@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: wanderwise-backend
+    env: node
+    plan: free
+    buildCommand: cd Server && npm install
+    startCommand: cd Server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: MONGO_URL
+        fromDatabase:
+          name: wanderwise-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        value: https://wanderwiseca.netlify.app
+
+databases:
+  - name: wanderwise-db
+    databaseName: wanderwise
+    user: wanderwise-user
+    plan: free

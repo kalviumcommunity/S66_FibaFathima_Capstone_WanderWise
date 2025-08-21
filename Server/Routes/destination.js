@@ -60,8 +60,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Submit new destination (authenticated users)
-router.post('/', authenticateToken, async (req, res) => {
+// Submit new destination (admin only)
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { name, description, country, location, images, activities, bestSeason, popularAttractions, price } = req.body;
     
@@ -76,13 +76,10 @@ router.post('/', authenticateToken, async (req, res) => {
       popularAttractions: popularAttractions || [],
       price: price || 0,
       addedBy: req.user._id,
-      isApproved: req.user.role === 'admin' // Auto-approve if admin
+      isApproved: true, // Always approved since only admins can create
+      approvedBy: req.user._id,
+      approvalDate: new Date()
     });
-    
-    if (req.user.role === 'admin') {
-      newDestination.approvedBy = req.user._id;
-      newDestination.approvalDate = new Date();
-    }
     
     await newDestination.save();
     
@@ -90,7 +87,7 @@ router.post('/', authenticateToken, async (req, res) => {
       .populate('addedBy', 'username');
     
     res.status(201).json({
-      message: req.user.role === 'admin' ? 'Destination created successfully' : 'Destination submitted for approval',
+      message: 'Destination created successfully by admin',
       destination: populatedDestination
     });
   } catch (error) {

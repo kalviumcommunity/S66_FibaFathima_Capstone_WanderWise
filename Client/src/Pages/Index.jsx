@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
-import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart, HeartOff, DollarSign, Globe } from 'lucide-react';
+import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { destinationService } from '../services/destinationService';
 
 const Index = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { isLoggedIn } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [wishlist, setWishlist] = useState([]);
   const [destinations, setDestinations] = useState([]);
@@ -46,18 +47,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-gray-800/70 to-slate-900/80"></div>
-      </div>
+        {/* Background Image with Overlay */}
+        <div
+          className="fixed inset-0 z-0"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-gray-800/70 to-slate-900/80"></div>
+        </div>
 
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50 relative">
@@ -66,49 +67,34 @@ const Index = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
               <MapPin className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              WanderWise
-            </h1>
+            <h1 className="text-2xl font-bold text-white">WanderWise</h1>
           </div>
+
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/about')}
-              className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
-            >
-              About
-            </Button>
             {!isLoggedIn ? (
               <>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => navigate('/login')}
                   className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
                 >
                   Login
                 </Button>
-                <Button 
+                <Button
                   onClick={() => navigate('/signup')}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-2 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
                 >
                   Sign Up
                 </Button>
               </>
             ) : (
               <>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => navigate('/dashboard')}
                   className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
                 >
                   Dashboard
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setIsLoggedIn(false)}
-                  className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
-                >
-                  Logout
                 </Button>
               </>
             )}
