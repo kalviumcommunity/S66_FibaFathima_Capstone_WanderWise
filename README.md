@@ -5,7 +5,7 @@
 
 
 #### Backend Deployed Link
-    [backend](https://s66-fibafathima-capstone-wanderwise.onrender.com/)
+   [backend](https://s66-fibafathima-capstone-wanderwise.onrender.com/)
 
 ### Idea Brief:
 **Project Name**: WanderWise
