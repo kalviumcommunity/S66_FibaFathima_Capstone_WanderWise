@@ -139,7 +139,8 @@ app.use((error, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+// Use 5002 as the default port to avoid conflicts with macOS system services
+const PORT = process.env.PORT || 5002;
 
 app.listen(PORT, async () => {
   try {
