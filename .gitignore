@@ -1,13 +1,17 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
 # Logs
 logs
 *.log
 
 # Environment files
+.env
 .env.local
 .env.*.local
+.env*
+!env.example
 
 # IDE and editor files
 .vscode/
@@ -45,3 +49,67 @@ coverage/
 
 # Vite
 .vite/
+
+# General
+*.env*
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Log files
+*.log
+
+# Database files
+*.db
+*.sqlite
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage reports
+coverage/
+
+# Build outputs
+dist/
+build/
+
+# Package manager
+package-lock.json
+yarn.lock
+
+# Netlify
+.netlify/
+
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+
+# NPM
+npm-debug.log*
+npm-error.log*
+
+# Testing
+.nyc_output/
+
+# Runtime data
+.pid
+*.pid
+
+# Editors
+*.sublime-project
+*.sublime-workspace
