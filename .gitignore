@@ -10,8 +10,7 @@ logs
 .env
 .env.local
 .env.*.local
-.env*
-!env.example
+!*.env.example
 
 # IDE and editor files
 .vscode/
@@ -50,54 +49,9 @@ coverage/
 # Vite
 .vite/
 
-# General
-*.env*
-.env
-.env.local
-.env.*.local
-
-# IDE and editor files
-*.swp
-*.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-
-# Log files
-*.log
-
-# Database files
-*.db
-*.sqlite
-
-# Temporary files
-*.tmp
-*.temp
-
-# Coverage reports
-coverage/
-
-# Build outputs
-dist/
-build/
-
 # Package manager
 package-lock.json
 yarn.lock
-
-# Netlify
-.netlify/
-
-# VS Code
-.vscode/
-
-# IntelliJ IDEA
-.idea/
 
 # NPM
 npm-debug.log*
