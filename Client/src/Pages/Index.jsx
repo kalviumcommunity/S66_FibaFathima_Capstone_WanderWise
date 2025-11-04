@@ -14,7 +14,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    destinationService.getDestinations()
+    destinationService.getDestinations({ sort: 'popular' })
       .then(setDestinations)
       .catch(console.error);
   }, []);
@@ -41,8 +41,11 @@ const Index = () => {
   };
 
   const filteredDestinations = destinations.filter(destination =>
-    destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    destination.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (searchTerm ? 
+      (destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      destination.description.toLowerCase().includes(searchTerm.toLowerCase())) :
+      destination.isPopular
+    )
   );
 
   return (
@@ -206,7 +209,7 @@ const Index = () => {
                 >
                   <div className="relative">
                     <img 
-                      src={destination.image} 
+                      src={destination.images?.[0] || '/placeholder-image.jpg'} 
                       alt={destination.name}
                       className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -227,7 +230,7 @@ const Index = () => {
                       )}
                     </button>
                     
-                    {destination.popular && (
+                    {destination.isPopular && (
                       <div className="absolute top-3 left-12 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
                         ⭐ Popular
                       </div>
