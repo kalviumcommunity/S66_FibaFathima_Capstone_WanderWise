@@ -11,9 +11,7 @@ services:
       - key: PORT
         value: 8080
       - key: MONGO_URL
-        fromDatabase:
-          name: wanderwise-db
-          property: connectionString
+        value: mongodb+srv://fibaaah:Jaseenamujeeb8830@fibaaah.dnfd5.mongodb.net/Capstone
       - key: JWT_SECRET
         generateValue: true
       - key: CLIENT_ORIGIN
@@ -21,8 +19,4 @@ services:
     runtime:
       version: 20
 
-databases:
-  - name: wanderwise-db
-    databaseName: wanderwise
-    user: wanderwise-user
-    plan: free
+# Remove the databases section since we're using MongoDB Atlas
