@@ -4,6 +4,37 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 
+// Buffer compatibility fix for Node.js v25+
+// This resolves the "Cannot read properties of undefined (reading 'prototype')" error
+// in buffer-equal-constant-time package
+if (typeof require !== 'undefined') {
+  try {
+    const bufferModule = require('buffer');
+    
+    // Ensure Buffer exists
+    if (!global.Buffer) {
+      global.Buffer = bufferModule.Buffer;
+    }
+    
+    // Polyfill for SlowBuffer if needed
+    if (bufferModule && !bufferModule.SlowBuffer) {
+      bufferModule.SlowBuffer = function SlowBuffer() {};
+      if (bufferModule.Buffer) {
+        bufferModule.SlowBuffer.prototype = Object.create(bufferModule.Buffer.prototype);
+      }
+    }
+    
+    // Additional polyfill for Buffer methods that might be missing
+    if (bufferModule.Buffer && !bufferModule.Buffer.isBuffer) {
+      bufferModule.Buffer.isBuffer = function isBuffer(obj) {
+        return obj instanceof bufferModule.Buffer;
+      };
+    }
+  } catch (bufferError) {
+    console.warn('Buffer compatibility polyfill warning:', bufferError.message);
+  }
+}
+
 // Import routes
 const authRoutes = require('./Routes/Auth');
 const destinationRoutes = require('./Routes/destination');
@@ -142,6 +173,16 @@ app.use((error, req, res, next) => {
 // Use 5002 as the default port to avoid conflicts with macOS system services
 const PORT = process.env.PORT || 5002;
 
+// Add compatibility check for buffer
+try {
+  // Ensure Buffer is properly defined
+  if (typeof Buffer === 'undefined') {
+    global.Buffer = require('buffer').Buffer;
+  }
+} catch (bufferError) {
+  console.warn('Buffer compatibility warning:', bufferError.message);
+}
+
 app.listen(PORT, async () => {
   try {
     await connection;
@@ -149,7 +190,7 @@ app.listen(PORT, async () => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📊 MongoDB: Connected successfully`);
   } catch (error) {
-    console.error('❌ Server startup error:', error);
+    console.error('Error during server startup:', error);
     process.exit(1);
   }
 });

@@ -36,7 +36,7 @@ A comprehensive travel application backend built with Node.js, Express, and Mong
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v20.x recommended, compatible with v18-v25)
 - MongoDB database
 - npm or yarn
 

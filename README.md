@@ -81,7 +81,7 @@ WanderWise is an intelligent travel planning platform that helps users discover 
 - **React Hot Toast** for notifications
 
 #### Backend
-- **Node.js** with Express
+- **Node.js** (v20.x recommended) with Express
 - **MongoDB** with Mongoose
 - **JWT** for authentication
 - **Google Auth Library** for OAuth verification

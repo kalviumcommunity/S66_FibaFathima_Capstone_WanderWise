@@ -18,6 +18,8 @@ services:
         generateValue: true
       - key: CLIENT_ORIGIN
         value: https://wanderwiseca.netlify.app
+    runtime:
+      version: 20
 
 databases:
   - name: wanderwise-db
