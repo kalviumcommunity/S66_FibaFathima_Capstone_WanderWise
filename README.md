@@ -104,9 +104,14 @@ CLIENT_ORIGIN=https://wanderwiseca.netlify.app
 ### Client Environment Variables (`Client/.env`)
 
 ```env
-VITE_API_BASE=https://s66-fibafathima-capstone-wanderwise.onrender.com
+VITE_API_BASE_URL=https://your-render-app.onrender.com/api
 VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id
 ```
+
+**Note:** 
+- Use `VITE_API_BASE_URL` (preferred) or `VITE_API_BASE` (alternative)
+- Include `/api` at the end of the URL (e.g., `https://your-app.onrender.com/api`)
+- For local development, you can omit this variable (defaults to `http://localhost:5002/api`)
 
 ## 🔧 Installation & Setup
 

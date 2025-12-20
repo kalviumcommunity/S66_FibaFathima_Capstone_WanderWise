@@ -59,20 +59,35 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
+  'http://localhost:3000',
   'https://wanderwiseca.netlify.app',
   process.env.CLIENT_ORIGIN,
   process.env.CLIENT_URL
 ].filter(Boolean); // Remove any undefined values
+
+// In production, also allow any Netlify preview deployments
+const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
+    // In production, allow Netlify preview deployments
+    if (isProduction && origin.includes('.netlify.app')) {
+      return callback(null, true);
+    }
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
+      // In development, be more permissive
+      if (!isProduction) {
+        console.warn('Allowing origin in development mode:', origin);
+        return callback(null, true);
+      }
       callback(new Error('Not allowed by CORS'));
     }
   },

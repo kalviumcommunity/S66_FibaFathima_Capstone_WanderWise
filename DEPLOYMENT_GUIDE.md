@@ -74,9 +74,15 @@ If you encounter issues with newer Node.js versions, ensure the following depend
 Set the following environment variables in Netlify:
 
 ```
-VITE_API_BASE=https://your-render-app.onrender.com/api
+VITE_API_BASE_URL=https://your-render-app.onrender.com/api
 VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
 ```
+
+**Important Notes:**
+- Use `VITE_API_BASE_URL` (not `VITE_API_BASE`)
+- The URL should include `/api` at the end (e.g., `https://your-app.onrender.com/api`)
+- If you only have the base URL without `/api`, the code will automatically append it
+- You can also use `VITE_API_BASE` as an alternative (for backward compatibility)
 
 ### 2. Build Settings
 

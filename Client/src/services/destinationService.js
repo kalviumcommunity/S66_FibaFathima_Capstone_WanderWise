@@ -12,18 +12,49 @@ class DestinationService {
       
       const endpoint = `/destinations${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       const response = await apiService.get(endpoint, false); // No auth required for public destinations
-      return response;
+      
+      // Ensure response is an array
+      if (Array.isArray(response)) {
+        return response;
+      }
+      
+      // Handle case where response might be wrapped in an object
+      if (response.destinations && Array.isArray(response.destinations)) {
+        return response.destinations;
+      }
+      
+      // If response is an object with a message (error case), return empty array
+      if (response.message) {
+        console.warn('Destination API returned message instead of array:', response.message);
+        return [];
+      }
+      
+      // Fallback: return empty array if response format is unexpected
+      console.warn('Unexpected response format from destinations API:', response);
+      return [];
     } catch (error) {
-      throw error;
+      console.error('Error fetching destinations:', error);
+      // Return empty array instead of throwing to prevent UI crashes
+      return [];
     }
   }
 
   // Get destination by ID
   async getDestinationById(id) {
     try {
+      if (!id) {
+        throw new Error('Destination ID is required');
+      }
       const response = await apiService.get(`/destinations/${id}`, false); // No auth required
+      
+      // Handle case where response might be wrapped
+      if (response.destination) {
+        return response.destination;
+      }
+      
       return response;
     } catch (error) {
+      console.error(`Error fetching destination ${id}:`, error);
       throw error;
     }
   }

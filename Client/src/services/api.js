@@ -1,11 +1,52 @@
-// Prefer Vite env var VITE_API_BASE_URL, fallback to local server port 5001
-const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL)
-  ? import.meta.env.VITE_API_BASE_URL
-  : 'http://localhost:5001/api';
+// Get API base URL from environment variables
+// Supports both VITE_API_BASE_URL and VITE_API_BASE for compatibility
+const getApiBaseUrl = () => {
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // Check for VITE_API_BASE_URL first (preferred)
+    if (import.meta.env.VITE_API_BASE_URL) {
+      // Ensure it ends with /api if not already included
+      const url = import.meta.env.VITE_API_BASE_URL;
+      return url.endsWith('/api') ? url : `${url}/api`;
+    }
+    // Fallback to VITE_API_BASE (alternative naming)
+    if (import.meta.env.VITE_API_BASE) {
+      const url = import.meta.env.VITE_API_BASE;
+      return url.endsWith('/api') ? url : `${url}/api`;
+    }
+  }
+  
+  // Development fallback - match server default port (5002)
+  // Check if we're in production by looking at the hostname
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    // If deployed on Netlify, try to construct the Render URL
+    // This is a fallback - ideally VITE_API_BASE_URL should be set in Netlify
+    if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
+      // Try common Render URL pattern - user should set VITE_API_BASE_URL in Netlify
+      console.warn('VITE_API_BASE_URL not set. Please configure it in Netlify environment variables.');
+      // Return a placeholder that will show an error - user must configure it
+      return 'https://your-render-app.onrender.com/api';
+    }
+  }
+  
+  // Local development fallback
+  return 'http://localhost:5002/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
+    
+    // Log API configuration in development
+    if (import.meta.env.DEV) {
+      console.log('🌐 API Configuration:', {
+        baseURL: this.baseURL,
+        envVar: import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE || 'Not set',
+        hostname: typeof window !== 'undefined' ? window.location.hostname : 'N/A'
+      });
+    }
   }
 
   // Helper method to get auth token
@@ -49,21 +90,51 @@ class ApiService {
     try {
       const response = await fetch(url, config);
       
+      // Handle network errors
+      if (!response) {
+        throw new Error('Network error: No response from server');
+      }
+      
       // Handle non-JSON responses
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response is not JSON');
+        // Try to get text response for better error messages
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
       }
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+        // Provide more detailed error information
+        const errorMessage = data.message || data.error || `HTTP error! status: ${response.status}`;
+        const error = new Error(errorMessage);
+        error.status = response.status;
+        error.data = data;
+        throw error;
       }
 
       return data;
     } catch (error) {
-      console.error('API request failed:', error);
+      // Enhanced error logging
+      console.error('API request failed:', {
+        url,
+        endpoint,
+        method: options.method || 'GET',
+        error: error.message,
+        status: error.status,
+        baseURL: this.baseURL
+      });
+      
+      // Provide user-friendly error messages
+      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        throw new Error('Unable to connect to server. Please check your internet connection and ensure the server is running.');
+      }
+      
+      if (this.baseURL.includes('your-render-app.onrender.com')) {
+        throw new Error('API URL not configured. Please set VITE_API_BASE_URL in your Netlify environment variables.');
+      }
+      
       throw error;
     }
   }
