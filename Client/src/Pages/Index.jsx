@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
-import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart } from 'lucide-react';
+import { MapPin, Users, Calendar, Star, ArrowRight, Search, Heart, Plane } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { destinationService } from '../services/destinationService';
@@ -11,12 +11,30 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [wishlist, setWishlist] = useState([]);
   const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    destinationService.getDestinations({ sort: 'popular' })
-      .then(setDestinations)
-      .catch(console.error);
+    const loadDestinations = async () => {
+      try {
+        console.log('🔍 Loading destinations...');
+        setLoading(true);
+        
+        console.log('📡 Testing direct API call...');
+        
+        const data = await destinationService.getDestinations({ sort: 'popular' });
+        console.log('✅ Destinations loaded:', data);
+        setDestinations(data);
+      } catch (error) {
+        console.error('❌ Error loading destinations:', error);
+        // Set empty array to prevent UI crashes
+        setDestinations([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadDestinations();
   }, []);
 
   const handleDestinationClick = (destination) => {
@@ -44,14 +62,23 @@ const Index = () => {
     (searchTerm ? 
       (destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       destination.description.toLowerCase().includes(searchTerm.toLowerCase())) :
-      destination.isPopular
+      true  // Show all destinations by default, not just popular ones
     )
   );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-        {/* Clean white background */}
-        <div className="fixed inset-0 z-0 bg-white"></div>
+        {/* Clean white background with subtle pattern */}
+        <div className="fixed inset-0 z-0 bg-white">
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 left-10 w-2 h-2 bg-green-500 rounded-full"></div>
+            <div className="absolute top-40 right-20 w-3 h-3 bg-green-400 rounded-full"></div>
+            <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-green-600 rounded-full"></div>
+            <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-green-500 rounded-full"></div>
+            <div className="absolute bottom-20 right-10 w-3 h-3 bg-green-400 rounded-full"></div>
+            <div className="absolute top-1/4 left-1/3 w-1 h-1 bg-green-600 rounded-full"></div>
+          </div>
+        </div>
 
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 relative shadow-sm">
@@ -97,15 +124,26 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden z-20">
-        <div className="container mx-auto px-4 text-center relative">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-10 left-5 w-64 h-64 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+          <div className="absolute top-40 right-10 w-72 h-72 bg-emerald-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-1000"></div>
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-green-50 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-pulse animation-delay-2000"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
           <div className="animate-fade-in">
+            <div className="inline-block mb-6">
+              <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <MapPin className="w-8 h-8 text-green-600" />
+              </div>
+            </div>
             <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
               Plan Your Perfect
-              <span className="block text-green-600">
+              <span className="block text-green-600 relative">
                 Adventure
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-green-400 rounded-full"></div>
               </span>
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
               Discover amazing destinations, answer a quick quiz, and get a personalized AI-powered travel itinerary tailored just for you!
             </p>
           </div>
@@ -157,12 +195,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Popular Destinations */}
+      {/* Explore Destinations */}
       <section className="py-16 relative z-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
             <h3 className="text-4xl font-bold text-gray-900 mb-4">
-              {searchTerm ? 'Search Results' : 'Popular Destinations'}
+              {searchTerm ? 'Search Results' : 'Explore Destinations'}
             </h3>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               {searchTerm 
@@ -172,7 +210,15 @@ const Index = () => {
             </p>
           </div>
           
-          {filteredDestinations.length === 0 && searchTerm ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+              <h4 className="text-2xl font-semibold text-gray-900 mb-3">Loading destinations...</h4>
+              <p className="text-gray-600 text-lg">
+                Finding the perfect places for your next adventure
+              </p>
+            </div>
+          ) : filteredDestinations.length === 0 && searchTerm ? (
             <div className="text-center py-12">
               <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="w-12 h-12 text-green-600" />
@@ -193,15 +239,16 @@ const Index = () => {
               {filteredDestinations.map((destination, index) => (
                 <Card 
                   key={destination._id || destination.id}
-                  className="group cursor-pointer hover:shadow-lg transition-all duration-200 border border-gray-200 bg-white overflow-hidden hover:border-green-300"
+                  className="group cursor-pointer hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white overflow-hidden hover:border-green-300 hover:-translate-y-1"
                   style={{ animationDelay: `${index * 100}ms` }}
                   onClick={() => handleDestinationClick(destination)}
                 >
                   <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
                     <img 
                       src={destination.images?.[0] || '/placeholder-image.jpg'} 
                       alt={destination.name}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-all duration-500"
                     />
                     
                     {/* Wishlist Button */}
@@ -265,9 +312,14 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center animate-fade-in animation-delay-200 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
-              <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="w-10 h-10 text-white" />
+            <div className="text-center animate-fade-in animation-delay-200 bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 hover:border-green-200 hover:-translate-y-2">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-green-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                  <Users className="w-10 h-10 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
               </div>
               <h4 className="text-2xl font-semibold text-gray-900 mb-3">Personalized Experience</h4>
               <p className="text-gray-600 text-lg">
@@ -275,9 +327,14 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="text-center animate-fade-in animation-delay-400 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
-              <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-10 h-10 text-white" />
+            <div className="text-center animate-fade-in animation-delay-400 bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 hover:border-green-200 hover:-translate-y-2">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-green-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                  <Calendar className="w-10 h-10 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
               </div>
               <h4 className="text-2xl font-semibold text-gray-900 mb-3">AI-Powered Planning</h4>
               <p className="text-gray-600 text-lg">
@@ -285,9 +342,14 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="text-center animate-fade-in animation-delay-600 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
-              <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Star className="w-10 h-10 text-white" />
+            <div className="text-center animate-fade-in animation-delay-600 bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 hover:border-green-200 hover:-translate-y-2">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-green-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                  <Star className="w-10 h-10 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
               </div>
               <h4 className="text-2xl font-semibold text-gray-900 mb-3">Budget Optimization</h4>
               <p className="text-gray-600 text-lg">
@@ -299,8 +361,17 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-white relative z-20">
-        <div className="container mx-auto px-4 text-center animate-fade-in">
+      <section className="py-16 bg-gradient-to-r from-green-50 to-white relative z-20">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-green-100 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-float"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-100 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-float animation-delay-1000"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center animate-fade-in relative z-10">
+          <div className="inline-block mb-6">
+            <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <Plane className="w-8 h-8 text-white" />
+            </div>
+          </div>
           <h3 className="text-4xl font-bold text-gray-900 mb-4">Ready to Start Your Adventure?</h3>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto text-lg">
             Join thousands of travelers who trust WanderWise to plan their perfect trips
@@ -308,7 +379,7 @@ const Index = () => {
           <Button 
             size="lg"
             onClick={() => navigate('/signup')}
-            className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 text-xl transition-colors duration-200"
+            className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 text-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             Get Started Free
           </Button>

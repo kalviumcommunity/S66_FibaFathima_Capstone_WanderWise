@@ -4,6 +4,7 @@ class DestinationService {
   // Get all approved destinations
   async getDestinations(filters = {}) {
     try {
+      console.log('🚀 DestinationService: Fetching destinations with filters:', filters);
       const queryParams = new URLSearchParams();
       
       if (filters.search) queryParams.append('search', filters.search);
@@ -11,7 +12,9 @@ class DestinationService {
       if (filters.sort) queryParams.append('sort', filters.sort);
       
       const endpoint = `/destinations${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      console.log('📡 DestinationService: Calling API endpoint:', endpoint);
       const response = await apiService.get(endpoint, false); // No auth required for public destinations
+      console.log('✅ DestinationService: API response received:', response);
       
       // Ensure response is an array
       if (Array.isArray(response)) {
