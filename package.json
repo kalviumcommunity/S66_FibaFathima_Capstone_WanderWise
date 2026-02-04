@@ -1,0 +1,27 @@
+{
+  "name": "wanderwise",
+  "version": "1.0.0",
+  "description": "WanderWise - Smart Travel Planner",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd Server && npm install && cd ../Client && npm install",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "start": "concurrently \"npm run server:start\" \"npm run client:dev\"",
+    "server:dev": "cd Server && npm run dev",
+    "server:start": "cd Server && npm start",
+    "client:dev": "cd Client && npm run dev",
+    "client:build": "cd Client && npm run build",
+    "build": "cd Client && npm run build"
+  },
+  "keywords": [
+    "travel",
+    "planner",
+    "wanderwise"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+

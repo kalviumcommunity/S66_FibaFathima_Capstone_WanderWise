@@ -71,46 +71,36 @@ const Dashboard = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'upcoming':
-        return <Badge variant="secondary" className="bg-green-100 text-green-800">Upcoming</Badge>;
+        return <Badge variant="secondary" className="bg-green-100 text-green-700">Upcoming</Badge>;
       case 'completed':
-        return <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">Completed</Badge>;
+        return <Badge variant="secondary" className="bg-green-100 text-green-700">Completed</Badge>;
       case 'cancelled':
-        return <Badge variant="secondary" className="bg-red-100 text-red-800">Cancelled</Badge>;
+        return <Badge variant="secondary" className="bg-red-100 text-red-700">Cancelled</Badge>;
       default:
-        return <Badge variant="secondary">Unknown</Badge>;
+        return <Badge variant="secondary" className="bg-gray-100 text-gray-700">Unknown</Badge>;
     }
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-gray-800/50 to-slate-900/60"></div>
-      </div>
+      {/* Clean white background */}
+      <div className="fixed inset-0 z-0 bg-white"></div>
 
       {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50 relative">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 relative shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <Globe className="h-8 w-8 text-emerald-400" />
-              <span className="text-xl font-bold text-white">WanderWise</span>
+              <Globe className="h-8 w-8 text-green-600" />
+              <span className="text-xl font-bold text-gray-900">WanderWise</span>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="text-white hover:text-green-200">
+              <Button variant="ghost" size="sm" className="text-gray-700 hover:text-green-600">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="text-white hover:text-green-200">
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="text-gray-700 hover:text-green-600">
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
@@ -126,67 +116,67 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Welcome back, {user?.name || 'Traveler'}! 👋
           </h1>
-          <p className="text-green-100 text-lg">
+          <p className="text-gray-600 text-lg">
             Ready to plan your next adventure? Let's make it unforgettable.
           </p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="p-2 bg-emerald-600/20 rounded-lg">
-                  <Plane className="h-6 w-6 text-emerald-400" />
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Plane className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-green-200">Total Trips</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalTrips}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Trips</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.totalTrips}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="p-2 bg-teal-600/20 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-teal-400" />
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <DollarSign className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-green-200">Total Spent</p>
-                  <p className="text-2xl font-bold text-white">${stats.totalSpent.toLocaleString()}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Spent</p>
+                  <p className="text-2xl font-bold text-gray-900">${stats.totalSpent.toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="p-2 bg-blue-600/20 rounded-lg">
-                  <Calendar className="h-6 w-6 text-blue-400" />
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Calendar className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-green-200">Upcoming</p>
-                  <p className="text-2xl font-bold text-white">{stats.upcomingTrips}</p>
+                  <p className="text-sm font-medium text-gray-600">Upcoming</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.upcomingTrips}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="p-2 bg-amber-600/20 rounded-lg">
-                  <Star className="h-6 w-6 text-amber-400" />
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Star className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-green-200">Favorites</p>
-                  <p className="text-2xl font-bold text-white">{stats.favoriteDestinations}</p>
+                  <p className="text-sm font-medium text-gray-600">Favorites</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.favoriteDestinations}</p>
                 </div>
               </div>
             </CardContent>
@@ -195,16 +185,16 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
             <CardContent className="p-6">
               <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-emerald-600/20 rounded-full flex items-center justify-center mb-4">
-                  <MapPin className="h-6 w-6 text-emerald-400" />
+                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <MapPin className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Explore Destinations</h3>
-                <p className="text-green-200 mb-4">Discover amazing places to visit</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Explore Destinations</h3>
+                <p className="text-gray-600 mb-4">Discover amazing places to visit</p>
                 <Link to="/destinations">
-                  <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
                     Browse Destinations
                   </Button>
                 </Link>
@@ -212,16 +202,16 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
             <CardContent className="p-6">
               <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-teal-600/20 rounded-full flex items-center justify-center mb-4">
-                  <Plus className="h-6 w-6 text-teal-400" />
+                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <Plus className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Plan New Trip</h3>
-                <p className="text-green-200 mb-4">Create a personalized itinerary</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Plan New Trip</h3>
+                <p className="text-gray-600 mb-4">Create a personalized itinerary</p>
                 <Link to="/destinations">
-                  <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
                     Start Planning
                   </Button>
                 </Link>
@@ -229,15 +219,15 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
             <CardContent className="p-6">
               <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center mb-4">
-                  <TrendingUp className="h-6 w-6 text-blue-400" />
+                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">View Analytics</h3>
-                <p className="text-green-200 mb-4">Track your travel spending</p>
-                <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">View Analytics</h3>
+                <p className="text-gray-600 mb-4">Track your travel spending</p>
+                <Button className="w-full bg-green-600 hover:bg-green-700">
                   View Reports
                 </Button>
               </div>
@@ -248,9 +238,9 @@ const Dashboard = () => {
         {/* Recent Trips */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Recent Trips</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Recent Trips</h2>
             <Link to="/trips">
-              <Button variant="outline" className="border-white/30 text-white hover:bg-white/20">
+              <Button variant="outline" className="border border-gray-300 text-gray-700 hover:bg-gray-50">
                 View All
               </Button>
             </Link>
@@ -258,7 +248,7 @@ const Dashboard = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recentTrips.map((trip) => (
-              <Card key={trip.id} className="bg-white/10 backdrop-blur-sm border-white/20 hover:shadow-lg transition-all duration-300">
+              <Card key={trip.id} className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
                 <div className="relative">
                   <img
                     src={trip.image}
@@ -270,8 +260,8 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <CardContent className="p-4">
-                  <h3 className="font-semibold text-white mb-1">{trip.destination}</h3>
-                  <div className="flex items-center justify-between text-sm text-green-200 mb-2">
+                  <h3 className="font-semibold text-gray-900 mb-1">{trip.destination}</h3>
+                  <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                     <div className="flex items-center space-x-1">
                       <Calendar className="h-4 w-4" />
                       <span>{new Date(trip.date).toLocaleDateString()}</span>
@@ -281,7 +271,7 @@ const Dashboard = () => {
                       <span>${trip.budget.toLocaleString()}</span>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/20">
+                  <Button variant="outline" className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50">
                     View Details
                   </Button>
                 </CardContent>
@@ -292,52 +282,52 @@ const Dashboard = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-white">Travel Insights</CardTitle>
-              <CardDescription className="text-green-200">
+              <CardTitle className="text-gray-900">Travel Insights</CardTitle>
+              <CardDescription className="text-gray-600">
                 Your travel patterns and preferences
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-green-200">Most visited region</span>
-                  <span className="text-white font-medium">Europe</span>
+                  <span className="text-gray-600">Most visited region</span>
+                  <span className="text-gray-900 font-medium">Europe</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-green-200">Average trip duration</span>
-                  <span className="text-white font-medium">7 days</span>
+                  <span className="text-gray-600">Average trip duration</span>
+                  <span className="text-gray-900 font-medium">7 days</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-green-200">Preferred season</span>
-                  <span className="text-white font-medium">Summer</span>
+                  <span className="text-gray-600">Preferred season</span>
+                  <span className="text-gray-900 font-medium">Summer</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="bg-white border border-gray-200 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-white">Upcoming Adventures</CardTitle>
-              <CardDescription className="text-green-200">
+              <CardTitle className="text-gray-900">Upcoming Adventures</CardTitle>
+              <CardDescription className="text-gray-600">
                 Your next planned trips
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <div>
-                    <p className="text-white font-medium">Paris, France</p>
-                    <p className="text-green-200 text-sm">June 15, 2024</p>
+                    <p className="text-gray-900 font-medium">Paris, France</p>
+                    <p className="text-gray-600 text-sm">June 15, 2024</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <div>
-                    <p className="text-white font-medium">Tokyo, Japan</p>
-                    <p className="text-green-200 text-sm">September 8, 2024</p>
+                    <p className="text-gray-900 font-medium">Tokyo, Japan</p>
+                    <p className="text-gray-600 text-sm">September 8, 2024</p>
                   </div>
                 </div>
               </div>

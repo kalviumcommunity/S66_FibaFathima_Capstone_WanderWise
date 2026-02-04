@@ -43,7 +43,7 @@ const journalRoutes = require('./Routes/journals');
 const adminRoutes = require('./Routes/admin');
 
 // Import database connection
-const connection = require('./db/database');
+const connectDB = require('./db/database');
 
 // Load environment variables
 dotenv.config();
@@ -200,12 +200,16 @@ try {
 
 app.listen(PORT, async () => {
   try {
-    await connection;
+    await connectDB();
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔗 Backend URL: http://localhost:${PORT}`);
     console.log(`📊 MongoDB: Connected successfully`);
+    console.log(`🔐 JWT Secret configured: ${!!process.env.JWT_SECRET}`);
+    console.log(`🌐 MONGO_URL configured: ${!!process.env.MONGO_URL}`);
+    console.log('\n🚀 Application is ready!');
   } catch (error) {
-    console.error('Error during server startup:', error);
+    console.error('❌ Error during server startup:', error);
     process.exit(1);
   }
 });

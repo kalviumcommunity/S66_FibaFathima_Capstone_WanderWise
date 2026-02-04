@@ -51,14 +51,21 @@ class ApiService {
 
   // Helper method to get auth token
   getAuthToken() {
-    return sessionStorage.getItem('token');
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   // Helper method to set auth token
-  setAuthToken(token) {
+  setAuthToken(token, remember = false) {
     if (token) {
-      sessionStorage.setItem('token', token);
+      if (remember) {
+        localStorage.setItem('token', token);
+        sessionStorage.removeItem('token');
+      } else {
+        sessionStorage.setItem('token', token);
+        localStorage.removeItem('token');
+      }
     } else {
+      localStorage.removeItem('token');
       sessionStorage.removeItem('token');
     }
   }

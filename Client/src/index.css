@@ -2,51 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base color variables for WanderWise */
+/* Base color variables for WanderWise - Clean White and Green Theme */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 10%; /* Dark text */
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 10%; /* Dark card text */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 142 69% 34%; /* Clean green (#16A34A) */
+    --primary-foreground: 0 0% 100%; /* White text */
+    --secondary: 120 7% 95%; /* Very light gray */
+    --secondary-foreground: 0 0% 10%; /* Dark text */
+    --muted: 120 7% 95%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 120 7% 95%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 0 0% 100%; /* White text */
+    --border: 0 0% 85%; /* Light gray border */
+    --input: 0 0% 100%; /* White input bg */
+    --ring: 142 69% 34%; /* Green focus ring */
+    --radius: 0.5rem; /* Consistent radius */
+    
+    /* Extended theme colors */
+    --white: 0 0% 100%;
+    --black: 0 0% 0%;
+    --success: 142 69% 34%;
+    --green: 142 45% 58%;
+    --light-green: 120 7% 95%;
+    --dark-green: 142 69% 20%;
+    --gray: 0 0% 50%;
+    --light-gray: 0 0% 95%;
   }
 
   * {
@@ -124,14 +112,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: hsl(var(--light-gray));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #10b981, #059669);
+  background: hsl(var(--green));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #059669, #047857);
+  background: hsl(var(--dark-green));
 }

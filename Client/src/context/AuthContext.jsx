@@ -53,31 +53,27 @@ export const AuthProvider = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const login = async (credentials) => {
+  const login = async (credentials, remember = false) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await authService.login(credentials);
+      const response = await authService.login(credentials, remember);
       setUser(response.user);
       setIsLoggedIn(true);
       authService.storeUser(response.user);
       return response;
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const signup = async (userData) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await authService.signup(userData);
       setUser(response.user);
       setIsLoggedIn(true);
       authService.storeUser(response.user);
       return response;
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
@@ -90,92 +86,74 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfile = async (profileData) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const updatedUser = await authService.updateProfile(profileData);
       setUser(updatedUser);
       authService.storeUser(updatedUser);
       return updatedUser;
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const changePassword = async (passwordData) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await authService.changePassword(passwordData);
       return response;
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const googleLogin = async (credential) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await authService.googleLogin(credential);
       setUser(response.user);
       setIsLoggedIn(true);
       authService.storeUser(response.user);
       return response;
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const saveDestination = async (destinationId) => {
-    try {
-      const response = await authService.saveDestination(destinationId);
-      // Update user's saved destinations
-      if (user) {
-        const updatedUser = { ...user };
-        if (!updatedUser.savedDestinations) {
-          updatedUser.savedDestinations = [];
-        }
-        updatedUser.savedDestinations.push(destinationId);
-        setUser(updatedUser);
-        authService.storeUser(updatedUser);
+    const response = await authService.saveDestination(destinationId);
+    // Update user's saved destinations
+    if (user) {
+      const updatedUser = { ...user };
+      if (!updatedUser.savedDestinations) {
+        updatedUser.savedDestinations = [];
       }
-      return response;
-    } catch (error) {
-      throw error;
+      updatedUser.savedDestinations.push(destinationId);
+      setUser(updatedUser);
+      authService.storeUser(updatedUser);
     }
+    return response;
   };
 
   const removeDestination = async (destinationId) => {
-    try {
-      const response = await authService.removeDestination(destinationId);
-      // Update user's saved destinations
-      if (user) {
-        const updatedUser = { ...user };
-        if (updatedUser.savedDestinations) {
-          updatedUser.savedDestinations = updatedUser.savedDestinations.filter(
-            id => id !== destinationId
-          );
-        }
-        setUser(updatedUser);
-        authService.storeUser(updatedUser);
+    const response = await authService.removeDestination(destinationId);
+    // Update user's saved destinations
+    if (user) {
+      const updatedUser = { ...user };
+      if (updatedUser.savedDestinations) {
+        updatedUser.savedDestinations = updatedUser.savedDestinations.filter(
+          id => id !== destinationId
+        );
       }
-      return response;
-    } catch (error) {
-      throw error;
+      setUser(updatedUser);
+      authService.storeUser(updatedUser);
     }
+    return response;
   };
 
   const getSavedDestinations = async () => {
-    try {
-      const savedDestinations = await authService.getSavedDestinations();
-      return savedDestinations;
-    } catch (error) {
-      throw error;
-    }
+    const savedDestinations = await authService.getSavedDestinations();
+    return savedDestinations;
   };
 
   const isAdmin = () => {

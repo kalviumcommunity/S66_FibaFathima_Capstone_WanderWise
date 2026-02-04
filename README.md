@@ -141,13 +141,51 @@ npm install
 
 ### 3. Run the Application
 
+**Quick Start (Recommended):**
 ```bash
-# Start server (from Server directory)
-npm start
-
-# Start client (from Client directory)
+# From the root directory - starts both server and client
 npm run dev
 ```
+
+This will start:
+- Server on `http://localhost:5002` (with auto-reload)
+- Client on `http://localhost:5173` (with hot-reload)
+
+**Alternative Methods:**
+
+1. **Using npm scripts:**
+   ```bash
+   npm run dev        # Development mode (both server & client)
+   npm start          # Production server + dev client
+   ```
+
+2. **Using shell script (Mac/Linux):**
+   ```bash
+   ./start.sh
+   ```
+
+3. **Using batch script (Windows):**
+   ```bash
+   start.bat
+   ```
+
+4. **Using PM2 (for production-like setup):**
+   ```bash
+   npm install -g pm2
+   pm2 start ecosystem.config.js
+   ```
+
+**Individual Commands:**
+```bash
+# Start server only (from Server directory)
+cd Server && npm start          # Production mode
+cd Server && npm run dev        # Development mode (with auto-reload)
+
+# Start client only (from Client directory)
+cd Client && npm run dev        # Development mode
+```
+
+📖 See [START_GUIDE.md](./START_GUIDE.md) for detailed startup options and troubleshooting.
 
 ## 📚 API Endpoints
 
@@ -220,6 +258,31 @@ npm run dev
 - **Backend**: Deployed on Render ✅
 - **Database**: MongoDB Atlas ✅
 - **Environment Variables**: Configured for production ✅
+
+### 🔄 Auto-Start Configuration
+
+Both services are configured to **automatically start** when deployed:
+
+- ✅ **Render Backend**: Auto-starts on deployment (configured in `render.yaml`)
+- ✅ **Netlify Frontend**: Auto-builds and deploys on push
+- ✅ **Auto-Deploy**: Both services auto-deploy on every push to `main` branch
+
+### 📋 Quick Deployment Setup
+
+**For your deployed link to work automatically, you need to:**
+
+1. **Set Netlify Environment Variable:**
+   - Go to Netlify → Site settings → Environment variables
+   - Add: `VITE_API_BASE_URL` = `https://your-render-backend-url.onrender.com/api`
+   - Replace with your actual Render backend URL
+   - Trigger a new deployment after adding
+
+2. **Verify Render Backend:**
+   - Check Render dashboard - service should show "Live"
+   - Test: `https://your-backend-url.onrender.com/health`
+
+📖 **Detailed instructions:** See [DEPLOYMENT_SETUP.md](./DEPLOYMENT_SETUP.md)  
+⚡ **Quick checklist:** See [QUICK_DEPLOYMENT_CHECKLIST.md](./QUICK_DEPLOYMENT_CHECKLIST.md)
 
 ## 👥 Project Team
 

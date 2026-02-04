@@ -76,62 +76,52 @@ const Signup = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
-      {/* Background Image with Overlay */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-gray-800/50 to-slate-900/60"></div>
-      </div>
+      {/* Clean white background */}
+      <div className="fixed inset-0 z-0 bg-white"></div>
 
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center relative z-20">
         {/* Left Panel - Benefits */}
         <div className="space-y-6">
-          <Link to="/" className="text-sm text-emerald-200 hover:text-emerald-100 inline-flex items-center">
+          <Link to="/" className="text-sm text-gray-600 hover:text-gray-800 inline-flex items-center">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back to Home
           </Link>
           <div className="text-center md:text-left">
             <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center">
-                <Globe className="h-8 w-8 text-emerald-400" />
+              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                <Globe className="h-8 w-8 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">WanderWise</span>
+              <span className="text-xl font-bold text-gray-900">WanderWise</span>
             </div>
-            <h2 className="text-3xl font-bold text-white">
-              Join <span className="text-emerald-300">WanderWise</span> Today
+            <h2 className="text-3xl font-bold text-gray-900">
+              Join <span className="text-green-600">WanderWise</span> Today
             </h2>
-            <p className="text-emerald-100">Sign up to start planning your next adventure</p>
+            <p className="text-gray-600">Sign up to start planning your next adventure</p>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-sm w-full max-w-sm border border-white/20">
-            <h3 className="text-md font-semibold mb-4 text-white">Benefits of joining WanderWise:</h3>
-            <ul className="space-y-3 text-sm text-emerald-200">
+          <div className="bg-green-50 p-6 rounded-xl shadow-sm w-full max-w-sm border border-green-200">
+            <h3 className="text-md font-semibold mb-4 text-gray-900">Benefits of joining WanderWise:</h3>
+            <ul className="space-y-3 text-sm text-gray-700">
               <li className="flex items-center">
-                <span className="text-emerald-400 mr-2">✓</span> Personalized Travel Experience
+                <span className="text-green-600 mr-2">✓</span> Personalized Travel Experience
               </li>
               <li className="flex items-center">
-                <span className="text-emerald-400 mr-2">✓</span> AI-Powered Travel Companion
+                <span className="text-green-600 mr-2">✓</span> AI-Powered Travel Companion
               </li>
               <li className="flex items-center">
-                <span className="text-emerald-400 mr-2">✓</span> Budget-Friendly Travel
+                <span className="text-green-600 mr-2">✓</span> Budget-Friendly Travel
               </li>
               <li className="flex items-center">
-                <span className="text-emerald-400 mr-2">✓</span> Discover Like Never Before
+                <span className="text-green-600 mr-2">✓</span> Discover Like Never Before
               </li>
             </ul>
           </div>
         </div>
 
         {/* Right Panel - Signup Form */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-xl w-full max-w-md">
+        <Card className="bg-white border border-gray-200 shadow-sm w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-white">Create Account</CardTitle>
-            <CardDescription className="text-emerald-200">
+            <CardTitle className="text-2xl font-bold text-gray-900">Create Account</CardTitle>
+            <CardDescription className="text-gray-600">
               Start your journey with personalized travel planning
             </CardDescription>
           </CardHeader>
@@ -141,27 +131,28 @@ const Signup = () => {
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
-                theme="filled_blue"
+                theme="outline"
                 size="large"
                 text="signup_with"
                 shape="rectangular"
                 width="100%"
+                disabled={isGoogleLoading}
               />
             </div>
 
             <div className="relative mb-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/30"></div>
+                <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-transparent text-emerald-200">Or continue with email</span>
+                <span className="px-2 bg-white text-gray-500">Or continue with email</span>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-white font-medium">First Name</Label>
+                  <Label htmlFor="firstName" className="text-gray-700 font-medium">First Name</Label>
                   <Input
                     id="firstName"
                     name="firstName"
@@ -170,11 +161,11 @@ const Signup = () => {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/20 border-white/30 text-white placeholder-emerald-200 focus:ring-emerald-400"
+                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-white font-medium">Last Name</Label>
+                  <Label htmlFor="lastName" className="text-gray-700 font-medium">Last Name</Label>
                   <Input
                     id="lastName"
                     name="lastName"
@@ -183,13 +174,13 @@ const Signup = () => {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/20 border-white/30 text-white placeholder-emerald-200 focus:ring-emerald-400"
+                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white font-medium">Email</Label>
+                <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -198,12 +189,12 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="bg-white/20 border-white/30 text-white placeholder-emerald-200 focus:ring-emerald-400"
+                  className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white font-medium">Password</Label>
+                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -213,12 +204,12 @@ const Signup = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/20 border-white/30 text-white placeholder-emerald-200 focus:ring-emerald-400 pr-10"
+                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500 pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-emerald-400 hover:text-emerald-200"
+                    className="absolute right-3 top-3 text-gray-500 hover:text-green-600"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -226,7 +217,7 @@ const Signup = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white font-medium">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirm Password</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -236,12 +227,12 @@ const Signup = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/20 border-white/30 text-white placeholder-emerald-200 focus:ring-emerald-400 pr-10"
+                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500 pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 text-emerald-400 hover:text-emerald-200"
+                    className="absolute right-3 top-3 text-gray-500 hover:text-green-600"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -251,16 +242,16 @@ const Signup = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-emerald-200">
+              <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-emerald-300 hover:text-emerald-100 font-medium">
+                <Link to="/login" className="text-green-600 hover:text-green-700 font-medium">
                   Sign in here
                 </Link>
               </p>
