@@ -10,22 +10,27 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Generate JWT token
 const generateToken = (userId) => {
+  if (!process.env.JWT_SECRET) {
+    console.error('❌ JWT_SECRET is not defined in environment variables');
+    throw new Error('Server configuration error: JWT_SECRET is missing');
+  }
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
 // Register new user
 router.post('/signup', async (req, res) => {
+  console.log(`📝 Signup attempt for email: ${req.body.email}`);
   try {
     const { username, email, password, bio, profilePicture } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
     });
-    
+
     if (existingUser) {
-      return res.status(400).json({ 
-        message: existingUser.email === email ? "Email already exists" : "Username already exists" 
+      return res.status(400).json({
+        message: existingUser.email === email ? "Email already exists" : "Username already exists"
       });
     }
 
@@ -57,6 +62,7 @@ router.post('/signup', async (req, res) => {
 
 // Login user
 router.post('/login', async (req, res) => {
+  console.log(`🔐 Login attempt for email: ${req.body.email}`);
   try {
     const { email, password } = req.body;
 
@@ -174,7 +180,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
       .populate('savedDestinations')
       .populate('tripHistory')
       .select('-password');
-    
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Failed to get profile', error: error.message });
@@ -185,7 +191,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
     const { username, email, bio, profilePicture } = req.body;
-    
+
     // Check if username or email already exists (excluding current user)
     if (username || email) {
       const existingUser = await User.findOne({
@@ -195,10 +201,10 @@ router.put('/profile', authenticateToken, async (req, res) => {
         ],
         _id: { $ne: req.user._id }
       });
-      
+
       if (existingUser) {
-        return res.status(400).json({ 
-          message: existingUser.email === (email || req.user.email) ? "Email already exists" : "Username already exists" 
+        return res.status(400).json({
+          message: existingUser.email === (email || req.user.email) ? "Email already exists" : "Username already exists"
         });
       }
     }
@@ -222,7 +228,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 
     const user = await User.findById(req.user._id);
     const isMatch = await user.comparePassword(currentPassword);
-    
+
     if (!isMatch) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
@@ -240,9 +246,9 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 router.post('/save-destination/:destinationId', authenticateToken, async (req, res) => {
   try {
     const { destinationId } = req.params;
-    
+
     const user = await User.findById(req.user._id);
-    
+
     if (user.savedDestinations.includes(destinationId)) {
       return res.status(400).json({ message: 'Destination already saved' });
     }
@@ -260,7 +266,7 @@ router.post('/save-destination/:destinationId', authenticateToken, async (req, r
 router.delete('/remove-destination/:destinationId', authenticateToken, async (req, res) => {
   try {
     const { destinationId } = req.params;
-    
+
     const user = await User.findById(req.user._id);
     user.savedDestinations = user.savedDestinations.filter(
       id => id.toString() !== destinationId
@@ -279,7 +285,7 @@ router.get('/saved-destinations', authenticateToken, async (req, res) => {
     const user = await User.findById(req.user._id)
       .populate('savedDestinations')
       .select('savedDestinations');
-    
+
     res.json(user.savedDestinations);
   } catch (error) {
     res.status(500).json({ message: 'Failed to get saved destinations', error: error.message });
@@ -305,11 +311,11 @@ router.get('/users/:userId', authenticateToken, requireAdmin, async (req, res) =
       .populate('savedDestinations')
       .populate('tripHistory')
       .select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Failed to get user', error: error.message });
@@ -320,7 +326,7 @@ router.get('/users/:userId', authenticateToken, requireAdmin, async (req, res) =
 router.put('/users/:userId', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { username, email, role, isActive, bio } = req.body;
-    
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       { username, email, role, isActive, bio },
@@ -341,7 +347,7 @@ router.put('/users/:userId', authenticateToken, requireAdmin, async (req, res) =
 router.delete('/users/:userId', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.userId);
-    
+
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -356,7 +362,7 @@ router.delete('/users/:userId', authenticateToken, requireAdmin, async (req, res
 router.patch('/users/:userId/toggle-status', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -364,7 +370,7 @@ router.patch('/users/:userId/toggle-status', authenticateToken, requireAdmin, as
     user.isActive = !user.isActive;
     await user.save();
 
-    res.json({ 
+    res.json({
       message: `User ${user.isActive ? 'activated' : 'deactivated'} successfully`,
       user: user.toJSON()
     });
