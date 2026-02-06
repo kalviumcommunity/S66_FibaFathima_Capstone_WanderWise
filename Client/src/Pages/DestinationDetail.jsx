@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
-import { MapPin, Calendar, Users, Star, Heart, ArrowLeft } from 'lucide-react';
+import { MapPin, Calendar, Users, Star, Heart, ArrowLeft, Cloud, Plane } from 'lucide-react';
 import { destinationService } from '../services/destinationService';
 import { tripApiService } from '../services/tripApiService';
 import { useAuth } from '../context/AuthContext';
@@ -42,47 +42,12 @@ const DestinationDetail = () => {
       navigate('/login');
       return;
     }
-    setShowQuiz(true);
-  };
-
-  const handleQuizSubmit = async () => {
-    try {
-      // Create trip with quiz answers
-      const tripData = {
-        destinationId: destination._id,
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-        itinerary: [
-          {
-            day: 1,
-            activities: ['Arrival and check-in', 'Explore local area'],
-            mapLink: ''
-          },
-          {
-            day: 2,
-            activities: ['Visit main attractions', 'Local cuisine experience'],
-            mapLink: ''
-          },
-          {
-            day: 3,
-            activities: ['Cultural activities', 'Shopping'],
-            mapLink: ''
-          }
-        ]
-      };
-
-      const trip = await tripApiService.createTrip(tripData);
-
-      toast.success('Trip planned successfully!');
-      navigate(`/itinerary/${trip._id}`); // Navigate to specific itinerary
-    } catch (error) {
-      toast.error('Failed to create trip');
-    }
+    navigate(`/quiz/${id}`, { state: { destination } });
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#4facfe]/10 transition-colors duration-1000">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-500"></div>
       </div>
     );
@@ -90,9 +55,9 @@ const DestinationDetail = () => {
 
   if (!destination) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#4facfe]/10 transition-colors duration-1000">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Destination not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Destination not found</h2>
           <Button onClick={() => navigate('/destinations')}>
             Back to Destinations
           </Button>
@@ -102,178 +67,166 @@ const DestinationDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] transition-colors duration-1000 font-sans pb-20">
+
+      {/* Decorative Clouds */}
+      <div className="absolute top-20 left-10 opacity-30 dark:opacity-10 animate-float pointer-events-none z-0">
+        <Cloud className="w-24 h-24 text-white fill-white drop-shadow-xl" />
+      </div>
+      <div className="absolute top-60 right-20 opacity-20 dark:opacity-5 animate-float animation-delay-2000 pointer-events-none z-0">
+        <Cloud className="w-32 h-32 text-white fill-white drop-shadow-xl" />
+      </div>
+
+      {/* Night Mode Stars */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-white rounded-full animate-pulse"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 3 + 1}px`,
+              height: `${Math.random() * 3 + 1}px`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDelay: `${Math.random() * 2}s`,
+              opacity: Math.random() * 0.7 + 0.3,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10">
+        {/* Back Navigation */}
+        <div className="absolute top-6 left-6 z-50">
           <Button
             variant="ghost"
             onClick={() => navigate('/destinations')}
-            className="mb-4"
+            className="bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full p-4 border border-white/20 shadow-xl transition-all hover:scale-110 active:scale-90"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Destinations
+            <ArrowLeft className="h-6 w-6" />
           </Button>
         </div>
-      </div>
 
-      {/* Hero Section */}
-      <div className="relative h-96 bg-gray-900">
-        {destination.images && destination.images[0] && (
-          <img
-            src={destination.images[0]}
-            alt={destination.name}
-            className="w-full h-full object-cover"
-          />
-        )}
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-white">
-            <h1 className="text-4xl font-bold mb-2">{destination.name}</h1>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <MapPin className="h-5 w-5 mr-1" />
-                <span>{destination.location}, {destination.country}</span>
-              </div>
-              {destination.rating > 0 && (
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 mr-1 text-yellow-400" />
-                  <span>{destination.rating.toFixed(1)}</span>
+        {/* Hero Section */}
+        <div className="relative h-[60vh] w-full overflow-hidden rounded-b-[4rem] shadow-2xl border-b border-white/20">
+          {destination.images && destination.images[0] && (
+            <img
+              src={destination.images[0]}
+              alt={destination.name}
+              className="w-full h-full object-cover transform scale-105"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+          <div className="absolute bottom-0 left-0 w-full p-8 md:p-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                  <div className="flex items-center space-x-3 text-white/90 mb-4 uppercase tracking-[0.3em] font-black drop-shadow-lg">
+                    <MapPin className="h-6 w-6 text-blue-400" />
+                    <span className="text-xl">{destination.location}, {destination.country}</span>
+                  </div>
+                  <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-4 drop-shadow-2xl transform -rotate-1">
+                    {destination.name}
+                  </h1>
                 </div>
-              )}
+                <div className="flex items-center gap-4 bg-white/20 backdrop-blur-2xl px-6 py-3 rounded-[32px] border border-white/20 shadow-2xl transform rotate-2">
+                  <Star className="h-8 w-8 text-yellow-400 fill-current" />
+                  <span className="text-4xl font-black text-white tracking-tighter">{destination.rating.toFixed(1)}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Description */}
-            <Card>
-              <CardHeader>
-                <CardTitle>About {destination.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">{destination.description}</p>
-              </CardContent>
-            </Card>
+        {/* Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-            {/* Activities */}
-            {destination.activities && destination.activities.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Activities</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Description */}
+              <div className="bg-white/95 dark:bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-10 border border-white/40 dark:border-white/20 transition-all hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.15)]">
+                <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-3">
+                  About this place
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-xl font-medium">
+                  {destination.description}
+                </p>
+              </div>
+
+              {/* Activities */}
+              {destination.activities && destination.activities.length > 0 && (
+                <div className="bg-white/95 dark:bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-10 border border-white/40 dark:border-white/20">
+                  <h2 className="text-3xl font-black text-gray-900 mb-8">Things to do</h2>
+                  <div className="flex flex-wrap gap-4">
                     {destination.activities.map((activity, index) => (
-                      <Badge key={index} variant="secondary">
+                      <span
+                        key={index}
+                        className="bg-blue-600 text-white px-6 py-3 rounded-full font-black text-sm shadow-lg transform hover:scale-105 transition-transform cursor-default uppercase tracking-widest border-2 border-white/20"
+                      >
                         {activity}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              )}
 
-            {/* Popular Attractions */}
-            {destination.popularAttractions && destination.popularAttractions.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Popular Attractions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+              {/* Popular Attractions */}
+              {destination.popularAttractions && destination.popularAttractions.length > 0 && (
+                <div className="bg-white/95 dark:bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-10 border border-white/40 dark:border-white/20">
+                  <h2 className="text-3xl font-black text-gray-900 mb-8">Popular Attractions</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {destination.popularAttractions.map((attraction, index) => (
-                      <li key={index} className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-2 text-emerald-500" />
-                        {attraction}
-                      </li>
+                      <div key={index} className="flex items-center gap-4 p-5 rounded-[24px] bg-gray-50/50 dark:bg-gray-50/50 hover:bg-white dark:hover:bg-white transition-all border border-transparent hover:border-blue-500/30 hover:shadow-xl group">
+                        <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:rotate-12">
+                          <MapPin className="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white" />
+                        </div>
+                        <span className="font-black text-gray-700 dark:text-gray-200 text-lg">{attraction}</span>
+                      </div>
                     ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Trip Planning */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Plan Your Trip</CardTitle>
-                <CardDescription>
-                  Create a personalized itinerary for {destination.name}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            {/* Sidebar */}
+            <div className="space-y-8">
+              {/* Trip Planning Card */}
+              <div className="bg-white/95 dark:bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] p-10 border-2 border-blue-500/20 sticky top-24 transform hover:scale-[1.02] transition-all">
+                <div className="mb-8">
+                  <h3 className="text-3xl font-black text-gray-900 mb-4">Ready to explore?</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-lg font-medium leading-relaxed">
+                    Get a personalized itinerary including budget, hotels, and daily activities.
+                  </p>
+                </div>
+
                 {destination.bestSeason && (
-                  <div>
-                    <h4 className="font-medium mb-2">Best Season</h4>
-                    <p className="text-sm text-gray-600">{destination.bestSeason}</p>
+                  <div className="flex items-center gap-5 mb-10 p-6 bg-blue-50/50 dark:bg-blue-50/50 rounded-[32px] border-2 border-blue-100 dark:border-blue-100">
+                    <div className="w-16 h-16 bg-blue-600 rounded-[20px] flex items-center justify-center shadow-lg transform -rotate-6">
+                      <Calendar className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-600 font-black uppercase tracking-[0.2em] mb-1">Best Season</p>
+                      <p className="font-black text-gray-900 text-xl">{destination.bestSeason}</p>
+                    </div>
                   </div>
                 )}
-                <Button onClick={handlePlanTrip} className="w-full">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Plan Trip
+
+                <Button
+                  onClick={handlePlanTrip}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-10 text-2xl font-black shadow-[0_15px_40px_-5px_rgba(37,99,235,0.4)] hover:shadow-[0_20px_50px_-5px_rgba(37,99,235,0.5)] hover:scale-[1.03] active:scale-95 transition-all duration-300 transform"
+                >
+                  Start Planning <Plane className="h-8 w-8 ml-4" />
                 </Button>
-              </CardContent>
-            </Card>
 
-            {/* Quick Quiz Modal */}
-            {showQuiz && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Planning Quiz</CardTitle>
-                  <CardDescription>
-                    Help us create the perfect itinerary for you
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      What's your travel style?
-                    </label>
-                    <select 
-                      className="w-full p-2 border rounded-md"
-                      onChange={(e) => setQuizAnswers({...quizAnswers, style: e.target.value})}
-                    >
-                      <option value="">Select...</option>
-                      <option value="adventure">Adventure</option>
-                      <option value="culture">Culture</option>
-                      <option value="relaxation">Relaxation</option>
-                      <option value="luxury">Luxury</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Trip duration?
-                    </label>
-                    <select 
-                      className="w-full p-2 border rounded-md"
-                      onChange={(e) => setQuizAnswers({...quizAnswers, duration: e.target.value})}
-                    >
-                      <option value="">Select...</option>
-                      <option value="weekend">Weekend (2-3 days)</option>
-                      <option value="week">Week (7 days)</option>
-                      <option value="extended">Extended (10+ days)</option>
-                    </select>
-                  </div>
+                <p className="text-center text-gray-400 dark:text-gray-500 mt-6 text-sm font-bold uppercase tracking-widest">
+                  Quick & easy • 100% Personal
+                </p>
+              </div>
+            </div>
 
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setShowQuiz(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleQuizSubmit} className="flex-1">
-                      Create Trip
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
           </div>
         </div>
       </div>

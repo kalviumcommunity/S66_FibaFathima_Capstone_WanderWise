@@ -2,132 +2,261 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { Eye, EyeOff, Mail, Lock, Globe, ArrowLeft, Cloud, MapPin, Paperclip } from 'lucide-react';
 
 const SimpleLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login, googleLogin } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+    // Hardcoded images from Landing Page for consistency
+    const polaroidImages = [
+        "https://images.unsplash.com/photo-1506929562872-bb421503ef21",
+        "https://images.unsplash.com/photo-1599394022918-6c2776530abb"
+    ];
 
-    try {
-      console.log('Attempting login with:', { email, password: password.length + ' chars' });
-      await login({ email, password });
-      toast.success('Login successful!');
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('Login error:', err);
-      toast.error(err.message || 'Login failed');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
 
-  // Remove auto-fill function - users must type credentials manually
+        try {
+            console.log('Attempting login with:', { email, password: password.length + ' chars' });
+            await login({ email, password });
+            toast.success('Login successful!');
+            navigate('/dashboard');
+        } catch (err) {
+            console.error('Login error:', err);
+            toast.error(err.message || 'Login failed');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Clean white background */}
-      <div className="fixed inset-0 z-0 bg-white"></div>
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            setIsGoogleLoading(true);
+            await googleLogin(credentialResponse.credential);
+            toast.success('Google login successful!');
+            navigate('/dashboard');
+        } catch (err) {
+            const errorMessage = err.message || 'Google login failed';
+            toast.error(errorMessage);
+        } finally {
+            setIsGoogleLoading(false);
+        }
+    };
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
-          <div className="text-center mb-8">
-            <div className="inline-block p-3 bg-green-600 rounded-full mb-4">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">WanderWise</h1>
-            <p className="text-gray-600">Sign in to your account</p>
-          </div>
+    const handleGoogleError = () => {
+        toast.error('Google login failed');
+    };
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-green-600" />
+    return (
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <div className="min-h-screen bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] flex overflow-hidden font-sans transition-colors duration-1000">
+
+                {/* Decorative Clouds (Fixed Position) */}
+                <div className="absolute top-10 left-10 opacity-80 dark:opacity-20 animate-float pointer-events-none z-0 transition-opacity duration-500">
+                    <Cloud className="w-24 h-24 text-white fill-white drop-shadow-xl" />
                 </div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-green-600" />
+                <div className="absolute bottom-20 right-20 opacity-60 dark:opacity-10 animate-float animation-delay-2000 pointer-events-none z-0 transition-opacity duration-500">
+                    <Cloud className="w-32 h-32 text-white fill-white drop-shadow-xl" />
                 </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
-                  placeholder="Enter your password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 transition-colors duration-200"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
+
+                {/* Night Mode Stars */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
+                    {[...Array(20)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute bg-white rounded-full animate-pulse"
+                            style={{
+                                top: `${Math.random() * 100}%`,
+                                left: `${Math.random() * 100}%`,
+                                width: `${Math.random() * 3 + 1}px`,
+                                height: `${Math.random() * 3 + 1}px`,
+                                animationDuration: `${Math.random() * 3 + 2}s`,
+                                animationDelay: `${Math.random() * 2}s`,
+                                opacity: Math.random() * 0.7 + 0.3,
+                            }}
+                        />
+                    ))}
+                </div>
+
+                <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center relative z-10 p-4 lg:p-12 gap-12 lg:gap-24">
+
+                    {/* Left Side: Branding (Hidden on small mobile to focus on form, or kept for consistency) - Visible on large screens */}
+                    <div className="hidden lg:flex flex-col items-center justify-center w-full lg:w-1/2 space-y-12">
+                        {/* Roamy Logo Style Title */}
+                        <div className="text-center">
+                            <Link to="/" className="inline-block group">
+                                <h1 className="text-7xl xl:text-8xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
+                                    WanderWise
+                                </h1>
+                            </Link>
+                            <p className="text-xl text-white/90 mt-4 font-medium max-w-md mx-auto text-center leading-relaxed">
+                                "The journey of a thousand miles begins with a single login."
+                            </p>
+                        </div>
+
+                        {/* 3D Collage Container - Directly from Index.jsx */}
+                        <div className="relative w-full max-w-sm aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
+                            {/* Polaroid 1 (Left Back) */}
+                            <div className="absolute top-0 left-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
+                                <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
+                                    <img
+                                        src={polaroidImages[0]}
+                                        className="w-full h-full object-cover"
+                                        alt="Travel"
+                                    />
+                                </div>
+                                <div className="h-1/6 bg-white"></div>
+                            </div>
+
+                            {/* Polaroid 2 (Right Front) */}
+                            <div className="absolute top-12 right-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
+                                <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
+                                    <img
+                                        src={polaroidImages[1]}
+                                        className="w-full h-full object-cover"
+                                        alt="Adventure"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 3D Elements */}
+                            <div className="absolute -top-6 -left-2 z-20 animate-bounce">
+                                <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                                    <MapPin className="w-7 h-7 text-white fill-white" />
+                                </div>
+                            </div>
+
+                            <div className="absolute -bottom-4 right-8 z-20 transform rotate-45">
+                                <Paperclip className="w-20 h-20 text-white/80 drop-shadow-xl" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Side: Login Form */}
+                    <div className="w-full lg:w-1/2 max-w-lg">
+                        <div className="bg-white/95 backdrop-blur-2xl border border-[#BFE3FF] shadow-2xl rounded-[40px] p-8 lg:p-12 transform hover:scale-[1.01] transition-all duration-500">
+                            <div className="text-center mb-8">
+                                <div className="lg:hidden mb-6">
+                                    <h1 className="text-4xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
+                                </div>
+                                <h2 className="text-3xl font-black text-[#0F172A] mt-2">Welcome Back!</h2>
+                                <p className="text-[#475569] mt-2 font-medium italic">Ready for your next adventure?</p>
+                            </div>
+
+                            {/* Google Login Button */}
+                            <div className="w-full mb-8 flex justify-center">
+                                <GoogleLogin
+                                    onSuccess={handleGoogleSuccess}
+                                    onError={handleGoogleError}
+                                    theme="filled_blue"
+                                    size="large"
+                                    text="signin_with"
+                                    shape="pill"
+                                    width="100%"
+                                    disabled={isGoogleLoading}
+                                />
+                            </div>
+
+                            <div className="relative mb-8">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-gray-300 dark:border-slate-700"></div>
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase tracking-wider font-bold">
+                                    <span className="px-4 bg-transparent text-gray-500 dark:text-gray-400">Or continue with email</span>
+                                </div>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-[#475569] mb-2 ml-1">
+                                        Email
+                                    </label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                                        </div>
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="w-full pl-11 pr-4 py-4 bg-gray-50/50 dark:bg-gray-50/50 border-2 border-transparent focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-gray-900 placeholder-gray-400 font-bold"
+                                            placeholder="hello@example.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="flex justify-between items-center ml-1 mb-2">
+                                        <label className="block text-sm font-bold text-[#475569]">
+                                            Password
+                                        </label>
+                                        <a href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400">
+                                            Forgot?
+                                        </a>
+                                    </div>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                                        </div>
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="w-full pl-11 pr-12 py-4 bg-gray-50/50 dark:bg-gray-50/50 border-2 border-transparent focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-gray-900 placeholder-gray-400 font-bold"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-blue-600 transition-colors"
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff className="h-5 w-5" />
+                                            ) : (
+                                                <Eye className="h-5 w-5" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-full font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isLoading ? 'Signing In...' : 'Sign In'}
+                                </button>
+                            </form>
+
+                            <div className="mt-10 text-center bg-gray-50/50 p-6 rounded-[32px] border border-gray-100">
+                                <p className="text-sm text-gray-600">
+                                    New here?{' '}
+                                    <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-black underline underline-offset-4 decoration-2 transition-all">
+                                        Create an Account
+                                    </Link>
+                                </p>
+                            </div>
+                            <div className="mt-4 text-center">
+                                <Link to="/" className="text-sm font-bold text-white/80 hover:text-white transition-colors">
+                                    ← Back to Home
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-
-
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-green-600 hover:text-green-700 font-medium transition-colors duration-200">
-                Sign up
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
-              ← Back to Home
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+        </GoogleOAuthProvider>
+    );
 };
 
 export default SimpleLogin;

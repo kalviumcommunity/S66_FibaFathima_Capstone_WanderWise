@@ -1,110 +1,162 @@
-import React from 'react';
-import { MapPin, Users, Calendar, Star, Globe } from 'lucide-react';
-import { Button } from "@/Components/ui/button";
 import { useNavigate } from 'react-router-dom';
+import { Globe, Cloud, Sparkles, Users, Rocket, ArrowRight } from 'lucide-react';
+import { Button } from "@/Components/ui/button";
 
 const About = () => {
   const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-gray-800/70 to-slate-900/80"></div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] transition-colors duration-1000 font-sans">
+
+      {/* Decorative Clouds */}
+      <div className="absolute top-20 left-[10%] opacity-30 dark:opacity-10 animate-float pointer-events-none z-0">
+        <Cloud className="w-32 h-32 text-white fill-white drop-shadow-2xl" />
+      </div>
+      <div className="absolute top-60 right-[5%] opacity-20 dark:opacity-5 animate-float animation-delay-2000 pointer-events-none z-0">
+        <Cloud className="w-48 h-48 text-white fill-white drop-shadow-2xl" />
       </div>
 
-      {/* Header */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50 relative">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              WanderWise
-            </h1>
-          </div>
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/')} 
-            className="text-white hover:text-green-200 transition-all duration-300 hover:scale-105"
-          >
-            Home
-          </Button>
-        </div>
-      </header>
+      {/* Night Mode Stars */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block z-0">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-white rounded-full animate-pulse"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 3 + 1}px`,
+              height: `${Math.random() * 3 + 1}px`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDelay: `${Math.random() * 2}s`,
+              opacity: Math.random() * 0.7 + 0.3,
+            }}
+          />
+        ))}
+      </div>
 
-      {/* About Content */}
-      <section className="relative py-20 z-20">
-        <div className="container mx-auto px-4 max-w-3xl bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-8 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 text-center drop-shadow-lg">About WanderWise</h2>
-          <p className="text-lg text-green-100 mb-6 text-center">
-            <b>WanderWise</b> is your AI-powered travel companion, designed to make trip planning effortless, personalized, and fun. Whether you're a solo adventurer, a family, or a group of friends, WanderWise helps you discover amazing destinations, plan your itinerary, and optimize your travel budget—all in one place.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="flex flex-col items-center text-center">
-              <Users className="w-10 h-10 text-green-300 mb-2" />
-              <h3 className="text-2xl font-semibold text-white mb-2">Personalized Planning</h3>
-              <p className="text-green-100">Answer a quick quiz about your preferences and get a custom travel plan tailored just for you.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <Calendar className="w-10 h-10 text-emerald-300 mb-2" />
-              <h3 className="text-2xl font-semibold text-white mb-2">AI-Powered Itineraries</h3>
-              <p className="text-green-100">Receive detailed day-by-day itineraries with activities, dining, and more, powered by smart algorithms.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <Star className="w-10 h-10 text-yellow-300 mb-2" />
-              <h3 className="text-2xl font-semibold text-white mb-2">Budget Optimization</h3>
-              <p className="text-green-100">Get the most out of your budget with cost-effective recommendations and alternatives.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <Globe className="w-10 h-10 text-blue-300 mb-2" />
-              <h3 className="text-2xl font-semibold text-white mb-2">Global Destinations</h3>
-              <p className="text-green-100">Explore a curated selection of destinations from around the world, each with unique experiences.</p>
+      <div className="relative z-10">
+        {/* Navigation Bar */}
+        <nav className="bg-white/10 backdrop-blur-2xl border-b border-white/20 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-20">
+              <div className="flex items-center space-x-3 group cursor-pointer" onClick={() => navigate('/')}>
+                <div className="bg-white p-2 rounded-xl shadow-xl transform group-hover:rotate-12 transition-transform">
+                  <Globe className="h-6 w-6 text-blue-600" />
+                </div>
+                <h1 className="text-2xl font-black text-white tracking-tighter uppercase italic">WanderWise</h1>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/')}
+                className="text-white hover:bg-white/20 rounded-full font-black px-8 transition-all hover:scale-105"
+              >
+                Back To Home
+              </Button>
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-white mb-4 text-center">How to Use WanderWise</h3>
-          <ol className="list-decimal list-inside text-green-100 mb-6 space-y-2">
-            <li>Start on the Home page and browse popular destinations or use the search bar to find your dream location.</li>
-            <li>Click on a destination to begin a short quiz about your travel style and preferences.</li>
-            <li>After the quiz, set your travel budget and preferences in the Budget Planner.</li>
-            <li>Let WanderWise generate a personalized itinerary for you, complete with activities, dining, and tips.</li>
-            <li>Sign up or log in to save your trips, view your dashboard, and access more features.</li>
-          </ol>
-          <div className="text-center">
-            <Button 
-              size="lg"
-              onClick={() => navigate('/signup')}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 text-lg transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-3xl"
-            >
-              Get Started Free
-            </Button>
-          </div>
-        </div>
-      </section>
+        </nav>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm text-white py-10 relative z-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-emerald-900/20"></div>
-        <div className="container mx-auto px-4 relative text-center">
-          <div className="flex flex-col items-center justify-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center mb-2">
-              <MapPin className="w-5 h-5 text-white" />
+        {/* Hero Section */}
+        <section className="py-24 px-4 text-center">
+          <div className="max-w-7xl mx-auto">
+            <div className="inline-block bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/20 text-white font-black tracking-widest uppercase italic mb-8">
+              The Future of Travel
             </div>
-            <h4 className="text-xl font-bold">WanderWise</h4>
-            <p className="text-gray-300 mt-2">© 2024 WanderWise. Making travel planning effortless.</p>
+            <h2 className="text-7xl md:text-9xl font-black text-white mb-8 tracking-tighter drop-shadow-2xl leading-[0.9] transform -rotate-1">
+              WE ARE <br /> WANDERWISE.
+            </h2>
+            <p className="text-white/90 text-2xl md:text-3xl font-bold tracking-tight max-w-3xl mx-auto drop-shadow-lg italic leading-relaxed">
+              "We believe every journey should be as unique as the traveler taking it. Our mission is to democratize adventure through artificial intelligence."
+            </p>
           </div>
-        </div>
-      </footer>
+        </section>
+
+        {/* About Card */}
+        <section className="py-20 px-4">
+          <div className="max-w-5xl mx-auto bg-white/95 dark:bg-white/90 backdrop-blur-3xl rounded-[60px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] p-12 md:p-20 border border-white/40 dark:border-white/20 relative group overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32 transition-all group-hover:bg-blue-500/20" />
+
+            <div className="relative z-10 space-y-12">
+              <div className="text-center md:text-left">
+                <h3 className="text-4xl md:text-5xl font-black text-gray-900 mb-8 tracking-tighter uppercase italic">
+                  Our DNA
+                </h3>
+                <p className="text-xl md:text-2xl text-gray-600 font-bold leading-relaxed">
+                  WanderWise is your AI-powered travel companion, designed to make trip planning effortless, personalized, and fun. Discover amazing destinations, plan itineraries, and optimize your travel budget—all in one place.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-16">
+                {[
+                  { title: "AI Intelligence", desc: "Proprietary neural networks crunching millions of data points to find your perfect vibe.", icon: Sparkles, color: "text-blue-600 bg-blue-100" },
+                  { title: "Human Centered", desc: "Designed for travelers, by travelers. We prioritize soul over logic.", icon: Users, color: "text-purple-600 bg-purple-100" },
+                  { title: "Global Reach", desc: "From the bustling streets of Tokyo to the hidden gems of Tuscany.", icon: Globe, color: "text-emerald-600 bg-emerald-100" },
+                  { title: "Pure Freedom", desc: "No more rigid packages. Just pure, unadulterated exploration.", icon: Rocket, color: "text-orange-600 bg-orange-100" }
+                ].map((item, i) => (
+                  <div key={i} className="group/item flex items-start gap-6 p-6 rounded-[32px] bg-gray-50/50 dark:bg-gray-50/50 hover:bg-white transition-all border border-transparent hover:border-blue-500/20 hover:shadow-2xl">
+                    <div className={`w-16 h-16 rounded-[24px] flex items-center justify-center flex-shrink-0 transition-transform group-hover/item:rotate-12 ${item.color}`}>
+                      <item.icon className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-black text-gray-900 mb-2 tracking-tight uppercase italic">{item.title}</h4>
+                      <p className="text-gray-500 font-bold leading-snug">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-12 border-t border-gray-200">
+                <h3 className="text-3xl font-black text-gray-900 mb-10 tracking-tighter uppercase italic">How It Works</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                  {[
+                    "Find your dream location using our neural search.",
+                    "Engage with our AI-vibe check quiz.",
+                    "Define your budget and mission parameters.",
+                    "Deploy your personalized AI itinerary.",
+                    "Save, track, and share your adventures."
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-6 group/step">
+                      <div className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-black text-xl group-hover:scale-125 transition-transform">{i + 1}</div>
+                      <p className="text-lg font-bold text-gray-600">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-16 text-center">
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/signup')}
+                  className="bg-black dark:bg-white text-white dark:text-black hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white rounded-full px-16 py-10 text-3xl font-black shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:scale-105 transition-all duration-500 uppercase italic tracking-tighter"
+                >
+                  Join the Mission <ArrowRight className="ml-4 w-8 h-8 stroke-[3px]" />
+                </Button>
+                <p className="mt-8 text-gray-400 font-black uppercase tracking-widest text-sm italic">
+                  Zero setup. All adventure.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-20 bg-white/10 backdrop-blur-3xl border-t border-white/20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <div className="flex flex-col items-center">
+              <div className="bg-white p-3 rounded-2xl shadow-2xl mb-6">
+                <Globe className="h-10 w-10 text-blue-600" />
+              </div>
+              <h4 className="text-4xl font-black text-white tracking-tighter uppercase italic mb-4">WanderWise</h4>
+              <p className="text-white/60 font-medium text-lg max-w-sm mx-auto"> Making travel planning effortless, one line of code at a time.</p>
+              <div className="h-px w-32 bg-white/20 my-10" />
+              <p className="text-white/40 font-black uppercase tracking-widest text-xs">© 2024 WanderWise Global Intelligence</p>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };
 
-export default About; 
+export default About;
