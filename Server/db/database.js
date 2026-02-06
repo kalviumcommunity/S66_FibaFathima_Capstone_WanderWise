@@ -5,7 +5,11 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URL);
+    const mongoUrl = process.env.MONGO_URL;
+    if (!mongoUrl) {
+      throw new Error('MONGO_URL environment variable is not defined');
+    }
+    const conn = await mongoose.connect(mongoUrl);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
