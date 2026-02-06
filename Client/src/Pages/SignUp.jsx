@@ -183,7 +183,7 @@ const Signup = () => {
                   size="large"
                   text="signup_with"
                   shape="pill"
-                  width="100%"
+                  width="350"
                   disabled={isGoogleLoading}
                 />
               </div>

@@ -160,7 +160,7 @@ const SimpleLogin = () => {
                                     size="large"
                                     text="signin_with"
                                     shape="pill"
-                                    width="100%"
+                                    width="350"
                                     disabled={isGoogleLoading}
                                 />
                             </div>
