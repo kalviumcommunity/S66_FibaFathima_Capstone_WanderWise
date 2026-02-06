@@ -5,36 +5,74 @@
 /* Base color variables for WanderWise - Clean White and Green Theme */
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 0 0% 10%; /* Dark text */
-    --card: 0 0% 100%; /* White cards */
-    --card-foreground: 0 0% 10%; /* Dark card text */
+    /* Roamy-inspired Vibrant Theme */
+    --background: 200 100% 95%;
+    /* Light Blue Sky */
+    --foreground: 222 47% 11%;
+    /* Dark Blue Text */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 142 69% 34%; /* Clean green (#16A34A) */
-    --primary-foreground: 0 0% 100%; /* White text */
-    --secondary: 120 7% 95%; /* Very light gray */
-    --secondary-foreground: 0 0% 10%; /* Dark text */
-    --muted: 120 7% 95%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 120 7% 95%;
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 84.2% 60.2%; /* Red */
-    --destructive-foreground: 0 0% 100%; /* White text */
-    --border: 0 0% 85%; /* Light gray border */
-    --input: 0 0% 100%; /* White input bg */
-    --ring: 142 69% 34%; /* Green focus ring */
-    --radius: 0.5rem; /* Consistent radius */
-    
-    /* Extended theme colors */
-    --white: 0 0% 100%;
-    --black: 0 0% 0%;
-    --success: 142 69% 34%;
-    --green: 142 45% 58%;
-    --light-green: 120 7% 95%;
-    --dark-green: 142 69% 20%;
-    --gray: 0 0% 50%;
-    --light-gray: 0 0% 95%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Winning Text Colors */
+    --heading: #0F172A;
+    --subtext: #475569;
+    --muted-text: #64748B;
+    --card-text: #1F2937;
+
+    /* Winning Border Colors */
+    --border-light: #D6E9FF;
+    --border-premium: #BFE3FF;
+    --border-content: #CFE8FF;
+    --border-stats: #E0F2FF;
+
+    --primary: 217 91% 60%;
+    /* Vibrant Blue Button */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 199 89% 48%;
+    /* Sky Blue Accent */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 1rem;
+    /* More rounded */
+
+    /* Custom Roamy Palette - Light and Airy */
+    --sky-gradient-start: #4facfe;
+    --sky-gradient-end: #00f2fe;
+    --night-gradient-start: #4facfe;
+    /* Keep it sky-like even in dark mode */
+    --night-gradient-end: #a1c4fd;
+    /* Blend into a soft light blue */
+  }
+
+  .dark {
+    --background: 210 100% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    /* Keep cards white in dark mode too */
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
   }
 
   * {
@@ -48,6 +86,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -55,10 +94,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.2;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.3;
     transform: scale(1.05);
@@ -66,9 +108,12 @@
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }

@@ -3,8 +3,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Globe, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Cloud, MapPin, Paperclip } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
 import { useAuth } from '../context/AuthContext';
@@ -23,6 +22,12 @@ const Signup = () => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
   const { signup, googleLogin } = useAuth();
+
+  // Hardcoded images from Landing Page for consistency
+  const polaroidImages = [
+    "https://images.unsplash.com/photo-1506929562872-bb421503ef21",
+    "https://images.unsplash.com/photo-1599394022918-6c2776530abb"
+  ];
 
   const handleInputChange = (e) => {
     setFormData({
@@ -75,191 +80,239 @@ const Signup = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
-      {/* Clean white background */}
-      <div className="fixed inset-0 z-0 bg-white"></div>
+      <div className="min-h-screen bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] flex overflow-hidden font-sans transition-colors duration-1000">
 
-      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center relative z-20">
-        {/* Left Panel - Benefits */}
-        <div className="space-y-6">
-          <Link to="/" className="text-sm text-gray-600 hover:text-gray-800 inline-flex items-center">
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Home
-          </Link>
-          <div className="text-center md:text-left">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                <Globe className="h-8 w-8 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">WanderWise</span>
-            </div>
-            <h2 className="text-3xl font-bold text-gray-900">
-              Join <span className="text-green-600">WanderWise</span> Today
-            </h2>
-            <p className="text-gray-600">Sign up to start planning your next adventure</p>
-          </div>
-          
-          <div className="bg-green-50 p-6 rounded-xl shadow-sm w-full max-w-sm border border-green-200">
-            <h3 className="text-md font-semibold mb-4 text-gray-900">Benefits of joining WanderWise:</h3>
-            <ul className="space-y-3 text-sm text-gray-700">
-              <li className="flex items-center">
-                <span className="text-green-600 mr-2">✓</span> Personalized Travel Experience
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-600 mr-2">✓</span> AI-Powered Travel Companion
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-600 mr-2">✓</span> Budget-Friendly Travel
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-600 mr-2">✓</span> Discover Like Never Before
-              </li>
-            </ul>
-          </div>
+        {/* Decorative Clouds (Fixed Position) */}
+        <div className="absolute top-10 left-10 opacity-80 dark:opacity-20 animate-float pointer-events-none z-0 transition-opacity duration-500">
+          <Cloud className="w-24 h-24 text-white fill-white drop-shadow-xl" />
+        </div>
+        <div className="absolute top-20 right-20 opacity-60 dark:opacity-10 animate-float animation-delay-2000 pointer-events-none z-0 transition-opacity duration-500">
+          <Cloud className="w-32 h-32 text-white fill-white drop-shadow-xl" />
         </div>
 
-        {/* Right Panel - Signup Form */}
-        <Card className="bg-white border border-gray-200 shadow-sm w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">Create Account</CardTitle>
-            <CardDescription className="text-gray-600">
-              Start your journey with personalized travel planning
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Google Signup Button */}
-            <div className="w-full mb-6 flex justify-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                theme="outline"
-                size="large"
-                text="signup_with"
-                shape="rectangular"
-                width="100%"
-                disabled={isGoogleLoading}
-              />
-            </div>
+        {/* Night Mode Stars */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute bg-white rounded-full animate-pulse"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                animationDuration: `${Math.random() * 3 + 2}s`,
+                animationDelay: `${Math.random() * 2}s`,
+                opacity: Math.random() * 0.7 + 0.3,
+              }}
+            />
+          ))}
+        </div>
 
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with email</span>
-              </div>
-            </div>
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center relative z-10 p-4 lg:p-12 gap-12 lg:gap-24">
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-gray-700 font-medium">First Name</Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="John"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-gray-700 font-medium">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-gray-500 hover:text-green-600"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required
-                    className="border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-green-500 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 text-gray-500 hover:text-green-600"
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
-              >
-                {isLoading ? "Creating Account..." : "Create Account"}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <Link to="/login" className="text-green-600 hover:text-green-700 font-medium">
-                  Sign in here
-                </Link>
+          {/* Left Side: Branding and Hero Elements - Visible on desktop */}
+          <div className="hidden lg:flex flex-col items-center justify-center w-full lg:w-1/2 space-y-12">
+            {/* Roamy Logo Style Title */}
+            <div className="text-center">
+              <Link to="/" className="inline-block group">
+                <h1 className="text-7xl xl:text-8xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
+                  WanderWise
+                </h1>
+              </Link>
+              <p className="text-xl text-white/90 mt-4 font-medium max-w-md mx-auto text-center leading-relaxed">
+                "Join the community of explorers today."
               </p>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* 3D Collage Container */}
+            <div className="relative w-full max-w-sm aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
+              {/* Polaroid 1 (Left Back) */}
+              <div className="absolute top-0 left-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
+                <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
+                  <img
+                    src={polaroidImages[0]}
+                    className="w-full h-full object-cover"
+                    alt="Travel"
+                  />
+                </div>
+                <div className="h-1/6 bg-white"></div>
+              </div>
+
+              {/* Polaroid 2 (Right Front) */}
+              <div className="absolute top-12 right-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
+                <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
+                  <img
+                    src={polaroidImages[1]}
+                    className="w-full h-full object-cover"
+                    alt="Adventure"
+                  />
+                </div>
+              </div>
+
+              {/* 3D Elements */}
+              <div className="absolute -top-6 -left-2 z-20 animate-bounce">
+                <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                  <MapPin className="w-7 h-7 text-white fill-white" />
+                </div>
+              </div>
+
+              <div className="absolute -bottom-4 right-8 z-20 transform rotate-45">
+                <Paperclip className="w-20 h-20 text-white/80 drop-shadow-xl" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Signup Form */}
+          <div className="w-full lg:w-1/2 max-w-lg">
+            <div className="bg-white/95 backdrop-blur-2xl border border-[#BFE3FF] shadow-2xl rounded-[40px] p-10 max-h-[90vh] overflow-y-auto transform hover:scale-[1.01] transition-all duration-500">
+              <div className="text-center mb-8">
+                <div className="lg:hidden mb-6">
+                  <h1 className="text-4xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
+                </div>
+                <h2 className="text-3xl font-black text-[#0F172A] mt-2">Create Account</h2>
+                <p className="text-[#475569] mt-2 font-medium italic">Sign up to get started</p>
+              </div>
+
+              {/* Google Signup Button */}
+              <div className="w-full mb-8 flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme="filled_blue"
+                  size="large"
+                  text="signup_with"
+                  shape="pill"
+                  width="100%"
+                  disabled={isGoogleLoading}
+                />
+              </div>
+
+              <div className="relative mb-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-slate-700"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase tracking-wider font-bold">
+                  <span className="px-4 bg-transparent text-gray-500 dark:text-gray-400">Or continue with email</span>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="font-bold text-[#475569] ml-1">First Name</Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      required
+                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      required
+                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold pr-10 text-gray-900"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-gray-400 hover:text-blue-600 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Confirm Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold pr-10 text-gray-900"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-3 text-gray-400 hover:text-blue-600 transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-6 font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-4"
+                >
+                  {isLoading ? "Creating Account..." : "Create Account"}
+                </Button>
+              </form>
+
+              <div className="mt-10 text-center bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                <p className="text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <Link to="/login" className="text-blue-600 hover:text-blue-700 font-black underline underline-offset-4 decoration-2 transition-all ml-1">
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
+              <div className="mt-4 text-center">
+                <Link to="/" className="text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors">
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
     </GoogleOAuthProvider>
   );
 };

@@ -3,6 +3,8 @@ import { AuthProvider } from './context/AuthContext';
 import { TooltipProvider } from "@/Components/ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 
+import { ThemeProvider } from 'next-themes';
+
 // Pages
 import Index from './Pages/Index';
 import SimpleLogin from './Pages/SimpleLogin';
@@ -29,9 +31,10 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <TooltipProvider>
-        <div className="App min-h-screen bg-white transition-colors duration-500">
-          <Routes>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <TooltipProvider>
+          <div className="App min-h-screen bg-white transition-colors duration-500">
+            <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<SimpleLogin />} />
               <Route path="/signup" element={<SignUp />} />
@@ -49,11 +52,11 @@ function App() {
               <Route path="/journal/:tripId" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
               <Route path="/reflection" element={<ProtectedRoute><Reflection /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-              <Route path="/budget-planner" element={<ProtectedRoute><BudgetPlanner /></ProtectedRoute>} />
+              <Route path="/budget/:destinationId" element={<ProtectedRoute><BudgetPlanner /></ProtectedRoute>} />
               <Route path="/quiz/:destinationId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-              <Route path="/trip-generator" element={<ProtectedRoute><TripGenerator /></ProtectedRoute>} />
+              <Route path="/generate-trip/:destinationId" element={<ProtectedRoute><TripGenerator /></ProtectedRoute>} />
             </Routes>
-            <Toaster 
+            <Toaster
               position="top-right"
               toastOptions={{
                 duration: 4000,
@@ -77,8 +80,9 @@ function App() {
                 },
               }}
             />
-        </div>
-      </TooltipProvider>
+          </div>
+        </TooltipProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
