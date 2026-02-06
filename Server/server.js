@@ -10,20 +10,20 @@ const path = require('path');
 if (typeof require !== 'undefined') {
   try {
     const bufferModule = require('buffer');
-    
+
     // Ensure Buffer exists
     if (!global.Buffer) {
       global.Buffer = bufferModule.Buffer;
     }
-    
+
     // Polyfill for SlowBuffer if needed
     if (bufferModule && !bufferModule.SlowBuffer) {
-      bufferModule.SlowBuffer = function SlowBuffer() {};
+      bufferModule.SlowBuffer = function SlowBuffer() { };
       if (bufferModule.Buffer) {
         bufferModule.SlowBuffer.prototype = Object.create(bufferModule.Buffer.prototype);
       }
     }
-    
+
     // Additional polyfill for Buffer methods that might be missing
     if (bufferModule.Buffer && !bufferModule.Buffer.isBuffer) {
       bufferModule.Buffer.isBuffer = function isBuffer(obj) {
@@ -56,14 +56,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS configuration
 const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://localhost:3000',
+  'http://localhost:5002',
   'https://wanderwiseca.netlify.app',
   process.env.CLIENT_ORIGIN,
   process.env.CLIENT_URL
-].filter(Boolean); // Remove any undefined values
+].filter(Boolean).map(origin => origin.replace(/\/$/, '')); // Remove trailing slashes
 
 // In production, also allow any Netlify preview deployments
 const isProduction = process.env.NODE_ENV === 'production';
@@ -78,7 +75,7 @@ app.use(cors({
       return callback(null, true);
     }
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
@@ -105,8 +102,8 @@ app.use((req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -136,7 +133,7 @@ app.get('/', (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     message: 'Route not found',
     path: req.originalUrl
   });
@@ -145,7 +142,7 @@ app.use('*', (req, res) => {
 // Global error handler
 app.use((error, req, res, next) => {
   console.error('Global error handler:', error);
-  
+
   // Mongoose validation error
   if (error.name === 'ValidationError') {
     const errors = Object.values(error.errors).map(err => err.message);
@@ -154,7 +151,7 @@ app.use((error, req, res, next) => {
       errors
     });
   }
-  
+
   // Mongoose duplicate key error
   if (error.code === 11000) {
     const field = Object.keys(error.keyValue)[0];
@@ -163,20 +160,20 @@ app.use((error, req, res, next) => {
       field
     });
   }
-  
+
   // JWT errors
   if (error.name === 'JsonWebTokenError') {
     return res.status(401).json({
       message: 'Invalid token'
     });
   }
-  
+
   if (error.name === 'TokenExpiredError') {
     return res.status(401).json({
       message: 'Token expired'
     });
   }
-  
+
   // Default error
   res.status(error.status || 500).json({
     message: error.message || 'Internal server error',
