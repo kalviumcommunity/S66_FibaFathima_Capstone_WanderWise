@@ -80,7 +80,7 @@ const Signup = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className="min-h-screen bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] flex overflow-hidden font-sans transition-colors duration-1000">
+      <div className="min-h-screen w-full relative overflow-x-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] bg-fixed flex font-sans transition-colors duration-1000">
 
         {/* Decorative Clouds (Fixed Position) */}
         <div className="absolute top-10 left-10 opacity-80 dark:opacity-20 animate-float pointer-events-none z-0 transition-opacity duration-500">
@@ -116,19 +116,19 @@ const Signup = () => {
             {/* Roamy Logo Style Title */}
             <div className="text-center">
               <Link to="/" className="inline-block group">
-                <h1 className="text-7xl xl:text-8xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
+                <h1 className="text-5xl xl:text-6xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
                   WanderWise
                 </h1>
               </Link>
-              <p className="text-xl text-white/90 mt-4 font-medium max-w-md mx-auto text-center leading-relaxed">
+              <p className="text-lg text-white/90 mt-3 font-medium max-w-md mx-auto text-center leading-relaxed">
                 "Join the community of explorers today."
               </p>
             </div>
 
             {/* 3D Collage Container */}
-            <div className="relative w-full max-w-sm aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
+            <div className="relative w-full max-w-[280px] aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
               {/* Polaroid 1 (Left Back) */}
-              <div className="absolute top-0 left-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
+              <div className="absolute top-0 left-4 w-48 h-56 bg-white p-2 rounded-xl shadow-xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
                 <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
                   <img
                     src={polaroidImages[0]}
@@ -140,7 +140,7 @@ const Signup = () => {
               </div>
 
               {/* Polaroid 2 (Right Front) */}
-              <div className="absolute top-12 right-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
+              <div className="absolute top-10 right-4 w-48 h-56 bg-white p-2 rounded-xl shadow-xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
                 <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
                   <img
                     src={polaroidImages[1]}
@@ -164,14 +164,14 @@ const Signup = () => {
           </div>
 
           {/* Right Side - Signup Form */}
-          <div className="w-full lg:w-1/2 max-w-lg">
-            <div className="bg-white/95 backdrop-blur-2xl border border-[#BFE3FF] shadow-2xl rounded-[40px] p-10 max-h-[90vh] overflow-y-auto transform hover:scale-[1.01] transition-all duration-500">
+          <div className="w-full lg:w-1/2 max-w-md">
+            <div className="bg-white/20 backdrop-blur-2xl border border-white/30 shadow-2xl rounded-[20px] p-5 lg:p-6 max-h-[90vh] overflow-y-auto transform hover:scale-[1.01] transition-all duration-500">
               <div className="text-center mb-8">
-                <div className="lg:hidden mb-6">
-                  <h1 className="text-4xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
+                <div className="lg:hidden mb-4">
+                  <h1 className="text-3xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
                 </div>
-                <h2 className="text-3xl font-black text-[#0F172A] mt-2">Create Account</h2>
-                <p className="text-[#475569] mt-2 font-medium italic">Sign up to get started</p>
+                <h2 className="text-xl font-black text-white mt-1 drop-shadow-sm">Create Account</h2>
+                <p className="text-white/80 mt-1 font-medium italic drop-shadow-sm text-xs">Sign up to get started</p>
               </div>
 
               {/* Google Signup Button */}
@@ -183,7 +183,7 @@ const Signup = () => {
                   size="large"
                   text="signup_with"
                   shape="pill"
-                  width="350"
+                  width="300"
                   disabled={isGoogleLoading}
                 />
               </div>
@@ -192,15 +192,15 @@ const Signup = () => {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300 dark:border-slate-700"></div>
                 </div>
-                <div className="relative flex justify-center text-xs uppercase tracking-wider font-bold">
-                  <span className="px-4 bg-transparent text-gray-500 dark:text-gray-400">Or continue with email</span>
+                <div className="relative flex justify-center text-[10px] uppercase tracking-wider font-bold">
+                  <span className="px-3 bg-transparent text-white/60">Or continue with email</span>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="font-bold text-[#475569] ml-1">First Name</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="firstName" className="font-bold text-white/80 ml-1 text-xs">First Name</Label>
                     <Input
                       id="firstName"
                       name="firstName"
@@ -209,11 +209,11 @@ const Signup = () => {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                      className="rounded-xl border-2 border-white/20 bg-white/10 focus:bg-white/20 focus:border-white h-9 focus:ring-4 focus:ring-white/10 transition-all font-bold text-white placeholder-white/40 text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Last Name</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="lastName" className="font-bold text-white/80 ml-1 text-xs">Last Name</Label>
                     <Input
                       id="lastName"
                       name="lastName"
@@ -222,13 +222,13 @@ const Signup = () => {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
-                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                      className="rounded-xl border-2 border-white/20 bg-white/10 focus:bg-white/20 focus:border-white h-9 focus:ring-4 focus:ring-white/10 transition-all font-bold text-white placeholder-white/40 text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Email</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="font-bold text-white/80 ml-1 text-xs">Email</Label>
                   <Input
                     id="email"
                     name="email"
@@ -237,12 +237,12 @@ const Signup = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900"
+                    className="rounded-xl border-2 border-white/20 bg-white/10 focus:bg-white/20 focus:border-white h-9 focus:ring-4 focus:ring-white/10 transition-all font-bold text-white placeholder-white/40 text-sm"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Password</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className="font-bold text-white/80 ml-1 text-xs">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -252,20 +252,20 @@ const Signup = () => {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold pr-10 text-gray-900"
+                      className="rounded-xl border-2 border-white/20 bg-white/10 focus:bg-white/20 focus:border-white h-9 focus:ring-4 focus:ring-white/10 transition-all font-bold pr-10 text-white placeholder-white/40 text-sm"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-gray-400 hover:text-blue-600 transition-colors"
+                      className="absolute right-3 top-3 text-white/60 hover:text-white transition-colors"
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="font-bold text-gray-700 dark:text-gray-300 ml-1">Confirm Password</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="confirmPassword" className="font-bold text-white/80 ml-1 text-xs">Confirm Password</Label>
                   <div className="relative">
                     <Input
                       id="confirmPassword"
@@ -275,12 +275,12 @@ const Signup = () => {
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       required
-                      className="rounded-xl border-2 border-transparent bg-gray-50/50 dark:bg-gray-50/50 focus:border-blue-500 h-11 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold pr-10 text-gray-900"
+                      className="rounded-xl border-2 border-white/20 bg-white/10 focus:bg-white/20 focus:border-white h-9 focus:ring-4 focus:ring-white/10 transition-all font-bold pr-10 text-white placeholder-white/40 text-sm"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-3 text-gray-400 hover:text-blue-600 transition-colors"
+                      className="absolute right-3 top-3 text-white/60 hover:text-white transition-colors"
                     >
                       {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -290,16 +290,16 @@ const Signup = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-6 font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-4"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-2.5 font-bold text-sm shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-2 h-10"
                 >
-                  {isLoading ? "Creating Account..." : "Create Account"}
+                  {isLoading ? "Creating..." : "Create Account"}
                 </Button>
               </form>
 
-              <div className="mt-10 text-center bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
-                <p className="text-sm text-gray-600">
+              <div className="mt-6 text-center bg-white/10 p-3 rounded-xl border border-white/20">
+                <p className="text-xs text-white/80">
                   Already have an account?{' '}
-                  <Link to="/login" className="text-blue-600 hover:text-blue-700 font-black underline underline-offset-4 decoration-2 transition-all ml-1">
+                  <Link to="/login" className="text-white hover:text-blue-100 font-black underline underline-offset-4 decoration-2 transition-all ml-1">
                     Sign in here
                   </Link>
                 </p>

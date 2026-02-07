@@ -281,13 +281,13 @@ export const getWeatherData = async (destination) => {
   try {
     // Normalize destination name for better matching
     const normalizedDestination = destination?.toLowerCase().replace(/[^a-z]/g, '');
-    
+
     // For demo purposes, use mock data instead of real API
     // In production, you would use the real weather API
     if (MOCK_WEATHER_DATA[normalizedDestination]) {
       return MOCK_WEATHER_DATA[normalizedDestination];
     }
-    
+
     // Fallback weather data
     return {
       current: {
@@ -347,7 +347,7 @@ export const getWeatherData = async (destination) => {
 export const getDestinationData = (destination) => {
   // Normalize destination name for better matching
   const normalizedDestination = destination?.toLowerCase().replace(/[^a-z]/g, '');
-  
+
   // Map common variations to our data keys
   const destinationMap = {
     'bali': 'bali',
@@ -367,10 +367,10 @@ export const getDestinationData = (destination) => {
     'greece': 'santorini',
     'santorinigreece': 'santorini'
   };
-  
+
   const destKey = destinationMap[normalizedDestination] || normalizedDestination;
   const destData = DESTINATION_DATA[destKey];
-  
+
   if (!destData) {
     console.warn(`Destination data not available for: ${destination}, using generic data`);
     // Return generic data for unsupported destinations
@@ -401,7 +401,7 @@ export const getDestinationData = (destination) => {
       ]
     };
   }
-  
+
   return destData;
 };
 
@@ -423,18 +423,21 @@ export const generateRealisticTrip = (destination, quizAnswers, budget, weatherD
     throw new Error('Unable to generate trip data for this destination');
   }
 
-  const travelStyle = quizAnswers[0] || 'culture';
-  const duration = quizAnswers[1] || 'week';
-  const accommodation = quizAnswers[2] || 'budget';
-  const activities = quizAnswers[3] || 'historical';
-  const transport = quizAnswers[4] || 'mix';
+  const { type, days: userDays, travelers, extra } = quizAnswers || {};
 
   // Calculate trip duration
-  const days = duration === 'weekend' ? 3 : duration === 'week' ? 7 : duration === 'extended' ? 12 : 30;
+  const days = parseInt(userDays) || 5;
   const actualDays = Math.min(days, 7); // Limit to 7 days for demo
 
   // Generate day-by-day itinerary
   const itinerary = [];
+  const travelStyleMap = {
+    solo: 'adventure',
+    couple: 'relaxation',
+    family: 'culture',
+    friends: 'foodie'
+  };
+  const travelStyle = travelStyleMap[type] || 'culture';
   const availablePlaces = destData.realPlaces[travelStyle] || destData.realPlaces.culture || destData.realPlaces.adventure;
 
   for (let day = 1; day <= actualDays; day++) {
@@ -492,15 +495,18 @@ export const generateRealisticTrip = (destination, quizAnswers, budget, weatherD
   }
 
   // Select accommodation based on preference
-  const selectedAccommodation = destData.accommodation.find(acc => 
-    acc.type.toLowerCase() === accommodation
-  ) || destData.accommodation[1]; // Default to mid-range
+  const selectedAccommodation = destData.accommodation.find(acc => {
+    const b = parseInt(budget);
+    if (b > 50000) return acc.type.toLowerCase() === 'luxury';
+    if (b < 10000) return acc.type.toLowerCase() === 'budget';
+    return acc.type.toLowerCase() === 'boutique';
+  }) || destData.accommodation[1]; // Default to mid-range
 
   return {
     destination: destData,
     summary: {
-      title: `Perfect ${travelStyle.charAt(0).toUpperCase() + travelStyle.slice(1)} Trip to ${destData.name}`,
-      description: `A carefully curated ${duration} journey designed for ${travelStyle} enthusiasts. Experience the best of ${destData.name} with personalized activities, real accommodations, and current weather conditions.`,
+      title: `Perfect ${type ? type.charAt(0).toUpperCase() + type.slice(1) : ''} Trip to ${destData.name}`,
+      description: extra || `A carefully curated ${days}-day journey designed for ${type || 'travel'} enthusiasts. Experience the best of ${destData.name} with personalized activities, real accommodations, and current weather conditions.`,
       highlights: [
         "Real places and authentic experiences",
         "Current weather-optimized activities",
@@ -511,7 +517,7 @@ export const generateRealisticTrip = (destination, quizAnswers, budget, weatherD
     itinerary,
     recommendations: {
       accommodation: [selectedAccommodation],
-      transport: generateTransportRecommendations(destData.name, transport),
+      transport: generateTransportRecommendations(destData.name, 'mix'),
       tips: generateLocalTips(destData.name, travelStyle, weatherData)
     },
     budget,
@@ -566,7 +572,7 @@ const generateLocalTips = (destination, travelStyle, weatherData) => {
   }
 
   return tips;
-}; 
+};
 
 // Placeholder tripService for Dashboard.jsx
 export const tripService = {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/Components/ui/button";
+import { Badge } from "@/Components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import {
   ArrowLeft,
@@ -30,7 +31,9 @@ const TripGenerator = () => {
   const { destinationId } = useParams();
   const location = useLocation();
   const [destination, setDestination] = useState(location.state?.destination || null);
-  const { quizAnswers, budget } = location.state || {};
+  const { quizAnswers } = location.state || {};
+  const budget = quizAnswers?.budget;
+  const currency = quizAnswers?.currency || 'INR';
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -74,7 +77,41 @@ const TripGenerator = () => {
     if (destination) {
       generateTrip();
     }
-  }, [destination, quizAnswers, budget]);
+  }, [destination, quizAnswers]);
+
+  const handleRegenerate = () => {
+    setIsGenerating(true);
+    setGenerationProgress(0);
+    // The effect will trigger again if we change a dependency, 
+    // but here we can just call it manually or rely on state toggle if needed.
+    // To force re-run without changing dependencies, we can use a key or a trigger state.
+    setRegenTrigger(prev => prev + 1);
+  };
+
+  const [regenTrigger, setRegenTrigger] = useState(0);
+
+  useEffect(() => {
+    if (destination && regenTrigger > 0) {
+      const regenerate = async () => {
+        setIsGenerating(true);
+        setGenerationProgress(0);
+        try {
+          setGenerationProgress(10);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const generatedTrip = generateRealisticTrip(destination?.name, quizAnswers, budget, weatherData);
+          setTripData(generatedTrip);
+          setGenerationProgress(100);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          setIsGenerating(false);
+          toast.success("Brighter Idea Generated! 💡");
+        } catch (error) {
+          toast.error("AI Neural Link Failed.");
+          setIsGenerating(false);
+        }
+      };
+      regenerate();
+    }
+  }, [regenTrigger]);
 
   const getWeatherIcon = (description) => {
     if (description?.includes('Rain')) return <CloudRain className="w-8 h-8 text-blue-500" />;
@@ -83,8 +120,8 @@ const TripGenerator = () => {
   };
 
   const handleBack = () => {
-    navigate(`/budget/${destinationId}`, {
-      state: { destination, quizAnswers, budget }
+    navigate(`/quiz/${destinationId}`, {
+      state: { destination, quizAnswers }
     });
   };
 
@@ -101,6 +138,11 @@ const TripGenerator = () => {
     try {
       const formattedTrip = {
         destinationId: destination._id,
+        destinationName: destination.name,
+        destinationImage: destination.images?.[0],
+        budget: tripData.summary.budget,
+        currency: currency,
+        status: 'upcoming',
         startDate: new Date(),
         endDate: new Date(Date.now() + (tripData.itinerary.length * 24 * 60 * 60 * 1000)),
         itinerary: tripData.itinerary.map(day => ({
@@ -208,11 +250,11 @@ const TripGenerator = () => {
               </div>
 
               <div className="flex items-center space-x-4">
-                <Button variant="outline" size="sm" onClick={handleDownload} className="bg-white/10 border-white/20 text-white rounded-full font-black hover:bg-white hover:text-blue-600 px-6 h-12 transition-all">
-                  <Download className="w-5 h-5 mr-2" /> Download
+                <Button variant="outline" size="sm" onClick={handleRegenerate} className="bg-white/10 border-white/20 text-white rounded-full font-black hover:bg-white hover:text-blue-600 px-6 h-12 transition-all">
+                  <Sparkles className="w-5 h-5 mr-2" /> Better Version
                 </Button>
-                <Button onClick={handleSave} className="bg-black hover:bg-blue-600 text-white rounded-full font-black px-10 h-12 shadow-xl transition-all hover:scale-105 uppercase tracking-tighter italic">
-                  Save Mission
+                <Button onClick={handleSave} className="bg-white hover:bg-white/90 text-blue-600 rounded-full font-black px-10 h-12 shadow-xl transition-all hover:scale-105 uppercase tracking-tighter italic">
+                  Add to Trip
                 </Button>
               </div>
             </div>
@@ -328,7 +370,7 @@ const TripGenerator = () => {
                       <DollarSign className="text-emerald-400 w-8 h-8" />
                       <span className="font-black uppercase tracking-widest text-xs italic opacity-60">Est. Load</span>
                     </div>
-                    <span className="text-3xl font-black tracking-tighter">₹{tripData?.summary.budget?.toLocaleString()}</span>
+                    <span className="text-3xl font-black tracking-tighter">{currency} {tripData?.summary.budget?.toLocaleString()}</span>
                   </div>
                   <div className="flex items-center justify-between border-b border-white/10 pb-6">
                     <div className="flex items-center gap-4">
@@ -347,7 +389,7 @@ const TripGenerator = () => {
                 </div>
 
                 <Button onClick={handleSave} className="w-full mt-12 bg-blue-600 hover:bg-blue-700 py-10 rounded-[32px] text-2xl font-black uppercase italic tracking-tighter transition-all hover:scale-105 shadow-2xl">
-                  Deploy Plan
+                  Add to Dashboard
                 </Button>
               </div>
 
