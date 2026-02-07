@@ -57,7 +57,7 @@ const SimpleLogin = () => {
 
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-            <div className="min-h-screen bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] flex overflow-hidden font-sans transition-colors duration-1000">
+            <div className="min-h-screen w-full relative overflow-x-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] bg-fixed flex font-sans transition-colors duration-1000">
 
                 {/* Decorative Clouds (Fixed Position) */}
                 <div className="absolute top-10 left-10 opacity-80 dark:opacity-20 animate-float pointer-events-none z-0 transition-opacity duration-500">
@@ -93,19 +93,19 @@ const SimpleLogin = () => {
                         {/* Roamy Logo Style Title */}
                         <div className="text-center">
                             <Link to="/" className="inline-block group">
-                                <h1 className="text-7xl xl:text-8xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
+                                <h1 className="text-5xl xl:text-6xl font-black text-white drop-shadow-md tracking-tight transform -rotate-2 group-hover:scale-105 transition-transform duration-300">
                                     WanderWise
                                 </h1>
                             </Link>
-                            <p className="text-xl text-white/90 mt-4 font-medium max-w-md mx-auto text-center leading-relaxed">
+                            <p className="text-lg text-white/90 mt-3 font-medium max-w-md mx-auto text-center leading-relaxed">
                                 "The journey of a thousand miles begins with a single login."
                             </p>
                         </div>
 
                         {/* 3D Collage Container - Directly from Index.jsx */}
-                        <div className="relative w-full max-w-sm aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
+                        <div className="relative w-full max-w-[280px] aspect-square transform scale-90 hover:scale-100 transition-transform duration-500">
                             {/* Polaroid 1 (Left Back) */}
-                            <div className="absolute top-0 left-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
+                            <div className="absolute top-0 left-4 w-48 h-56 bg-white p-2 rounded-xl shadow-xl transform -rotate-12 transition-transform hover:rotate-0 hover:z-20 duration-300">
                                 <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
                                     <img
                                         src={polaroidImages[0]}
@@ -117,7 +117,7 @@ const SimpleLogin = () => {
                             </div>
 
                             {/* Polaroid 2 (Right Front) */}
-                            <div className="absolute top-12 right-4 w-60 h-72 bg-white p-3 rounded-xl shadow-2xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
+                            <div className="absolute top-10 right-4 w-48 h-56 bg-white p-2 rounded-xl shadow-xl transform rotate-6 z-10 transition-transform hover:rotate-0 duration-300">
                                 <div className="w-full h-5/6 bg-gray-200 overflow-hidden rounded-lg mb-4">
                                     <img
                                         src={polaroidImages[1]}
@@ -141,18 +141,18 @@ const SimpleLogin = () => {
                     </div>
 
                     {/* Right Side: Login Form */}
-                    <div className="w-full lg:w-1/2 max-w-lg">
-                        <div className="bg-white/95 backdrop-blur-2xl border border-[#BFE3FF] shadow-2xl rounded-[40px] p-8 lg:p-12 transform hover:scale-[1.01] transition-all duration-500">
+                    <div className="w-full lg:w-1/2 max-w-md">
+                        <div className="bg-white/20 backdrop-blur-2xl border border-white/30 shadow-2xl rounded-[20px] p-5 lg:p-6 transform hover:scale-[1.01] transition-all duration-500">
                             <div className="text-center mb-8">
-                                <div className="lg:hidden mb-6">
-                                    <h1 className="text-4xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
+                                <div className="lg:hidden mb-4">
+                                    <h1 className="text-3xl font-black text-blue-600 dark:text-white transform -rotate-2">WanderWise</h1>
                                 </div>
-                                <h2 className="text-3xl font-black text-[#0F172A] mt-2">Welcome Back!</h2>
-                                <p className="text-[#475569] mt-2 font-medium italic">Ready for your next adventure?</p>
+                                <h2 className="text-xl font-black text-white mt-1 drop-shadow-sm">Welcome Back!</h2>
+                                <p className="text-white/80 mt-1 font-medium italic drop-shadow-sm text-xs">Ready for your next adventure?</p>
                             </div>
 
                             {/* Google Login Button */}
-                            <div className="w-full mb-8 flex justify-center">
+                            <div className="w-full mb-6 flex justify-center scale-90 origin-center">
                                 <GoogleLogin
                                     onSuccess={handleGoogleSuccess}
                                     onError={handleGoogleError}
@@ -160,23 +160,23 @@ const SimpleLogin = () => {
                                     size="large"
                                     text="signin_with"
                                     shape="pill"
-                                    width="100%"
+                                    width="350"
                                     disabled={isGoogleLoading}
                                 />
                             </div>
 
                             <div className="relative mb-8">
                                 <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-300 dark:border-slate-700"></div>
+                                    <div className="w-full border-t border-white/10"></div>
                                 </div>
-                                <div className="relative flex justify-center text-xs uppercase tracking-wider font-bold">
-                                    <span className="px-4 bg-transparent text-gray-500 dark:text-gray-400">Or continue with email</span>
+                                <div className="relative flex justify-center text-[10px] uppercase tracking-wider font-bold">
+                                    <span className="px-3 bg-transparent text-white/60">Or continue with email</span>
                                 </div>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label className="block text-sm font-bold text-[#475569] mb-2 ml-1">
+                                    <label className="block text-sm font-bold text-white/80 mb-2 ml-1">
                                         Email
                                     </label>
                                     <div className="relative group">
@@ -187,7 +187,7 @@ const SimpleLogin = () => {
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full pl-11 pr-4 py-4 bg-gray-50/50 dark:bg-gray-50/50 border-2 border-transparent focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-gray-900 placeholder-gray-400 font-bold"
+                                            className="w-full pl-11 pr-4 py-3 bg-white/10 dark:bg-white/10 border-2 border-white/20 focus:border-white focus:bg-white/20 rounded-xl focus:outline-none focus:ring-4 focus:ring-white/10 transition-all duration-300 text-white placeholder-white/40 font-bold"
                                             placeholder="hello@example.com"
                                             required
                                         />
@@ -196,10 +196,10 @@ const SimpleLogin = () => {
 
                                 <div>
                                     <div className="flex justify-between items-center ml-1 mb-2">
-                                        <label className="block text-sm font-bold text-[#475569]">
+                                        <label className="block text-sm font-bold text-white/80">
                                             Password
                                         </label>
-                                        <a href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400">
+                                        <a href="#" className="text-sm font-bold text-white/90 hover:text-white transition-colors">
                                             Forgot?
                                         </a>
                                     </div>
@@ -211,14 +211,14 @@ const SimpleLogin = () => {
                                             type={showPassword ? "text" : "password"}
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            className="w-full pl-11 pr-12 py-4 bg-gray-50/50 dark:bg-gray-50/50 border-2 border-transparent focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-gray-900 placeholder-gray-400 font-bold"
+                                            className="w-full pl-11 pr-12 py-3 bg-white/10 dark:bg-white/10 border-2 border-white/20 focus:border-white focus:bg-white/20 rounded-xl focus:outline-none focus:ring-4 focus:ring-white/10 transition-all duration-300 text-white placeholder-white/40 font-bold"
                                             placeholder="••••••••"
                                             required
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-blue-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/60 hover:text-white transition-colors"
                                         >
                                             {showPassword ? (
                                                 <EyeOff className="h-5 w-5" />
@@ -232,17 +232,17 @@ const SimpleLogin = () => {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-full font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-6 rounded-full font-bold text-sm shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                 >
                                     {isLoading ? 'Signing In...' : 'Sign In'}
                                 </button>
                             </form>
 
-                            <div className="mt-10 text-center bg-gray-50/50 p-6 rounded-[32px] border border-gray-100">
-                                <p className="text-sm text-gray-600">
+                            <div className="mt-6 text-center bg-white/10 p-3 rounded-[16px] border border-white/20">
+                                <p className="text-xs text-white/80">
                                     New here?{' '}
-                                    <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-black underline underline-offset-4 decoration-2 transition-all">
-                                        Create an Account
+                                    <Link to="/signup" className="text-white hover:text-blue-100 font-black underline underline-offset-4 decoration-2 transition-all">
+                                        Create Account
                                     </Link>
                                 </p>
                             </div>

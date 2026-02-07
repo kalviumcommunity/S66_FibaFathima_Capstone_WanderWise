@@ -80,7 +80,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] transition-colors duration-1000 font-sans">
+    <div className="min-h-screen w-full relative overflow-x-hidden bg-gradient-to-b from-[#4facfe] to-[#00f2fe] dark:from-[#4facfe] dark:to-[#a1c4fd] bg-fixed transition-colors duration-1000 font-sans">
 
       {/* Decorative Clouds */}
       <div className="absolute top-20 left-10 opacity-30 dark:opacity-10 animate-float pointer-events-none z-0">
@@ -141,118 +141,118 @@ const Dashboard = () => {
           </div>
         </nav>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Welcome Section */}
-          <div className="mb-12 text-center md:text-left">
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl transform -rotate-1">
+          <div className="mb-8 text-center md:text-left">
+            <h1 className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl transform -rotate-1">
               Hey, {user?.name || 'Traveler'}! 👋
             </h1>
-            <p className="text-white/90 text-2xl font-medium tracking-tight drop-shadow-lg">
+            <p className="text-white/90 text-lg font-medium tracking-tight drop-shadow-lg">
               "Ready to plan your next adventure? Let's make it unforgettable."
             </p>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {[
               { label: 'Total Trips', value: stats.totalTrips, icon: Plane, color: 'bg-blue-500' },
               { label: 'Total Spent', value: `$${stats.totalSpent.toLocaleString()}`, icon: DollarSign, color: 'bg-emerald-500' },
               { label: 'Upcoming', value: stats.upcomingTrips, icon: Calendar, color: 'bg-orange-500' },
               { label: 'Favorites', value: stats.favoriteDestinations, icon: Star, color: 'bg-purple-500' }
             ].map((stat, i) => (
-              <Card key={i} className="bg-white border border-[#E0F2FF] rounded-[32px] shadow-lg transform hover:scale-105 transition-all duration-300">
-                <CardContent className="p-8">
+              <Card key={i} className="bg-white/20 backdrop-blur-lg border border-white/30 rounded-[20px] shadow-lg transform hover:scale-105 transition-all duration-300">
+                <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-4 ${stat.color} rounded-2xl shadow-lg transform -rotate-12`}>
-                      <stat.icon className="h-8 w-8 text-white" />
+                    <div className={`p-2.5 ${stat.color} rounded-lg shadow-lg transform -rotate-12`}>
+                      <stat.icon className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-4xl font-black text-gray-900 tracking-tighter">{stat.value}</span>
+                    <span className="text-xl font-black text-white tracking-tighter drop-shadow-sm">{stat.value}</span>
                   </div>
-                  <p className="text-lg font-black text-gray-400 uppercase tracking-widest">{stat.label}</p>
+                  <p className="text-[10px] font-black text-white/60 uppercase tracking-widest">{stat.label}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="group relative bg-white/90 backdrop-blur-xl border border-[#D6E9FF] rounded-[40px] shadow-xl p-10 transition-all hover:-translate-y-2">
-              <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-[24px] flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform shadow-inner">
-                <MapPin className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="group relative bg-white/20 backdrop-blur-xl border border-white/30 rounded-[24px] shadow-lg p-6 transition-all hover:-translate-y-2">
+              <div className="mx-auto w-12 h-12 bg-white/10 dark:bg-blue-900/30 rounded-[16px] flex items-center justify-center mb-4 transform group-hover:rotate-12 transition-transform shadow-inner border border-white/20">
+                <MapPin className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3 text-center tracking-tight">Explore</h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-8 text-center font-medium leading-relaxed">Discover amazing places across the globe.</p>
+              <h3 className="text-lg font-black text-white mb-1 text-center tracking-tight drop-shadow-sm">Explore</h3>
+              <p className="text-white/70 mb-5 text-center font-medium leading-relaxed text-xs">Discover amazing places across the globe.</p>
               <Link to="/destinations">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-8 text-xl font-black shadow-xl">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-6 text-lg font-black shadow-lg">
                   Browse Now
                 </Button>
               </Link>
             </div>
 
-            <div className="group relative bg-white/95 backdrop-blur-2xl border border-[#BFE3FF] rounded-[40px] shadow-2xl p-10 transition-all hover:-translate-y-2 scale-105 z-20">
-              <div className="mx-auto w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-[24px] flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform shadow-inner">
-                <Plus className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
+            <div className="group relative bg-white/30 backdrop-blur-2xl border border-white/40 rounded-[24px] shadow-xl p-6 transition-all hover:-translate-y-2 scale-105 z-20">
+              <div className="mx-auto w-12 h-12 bg-white/20 dark:bg-emerald-900/30 rounded-[16px] flex items-center justify-center mb-4 transform group-hover:scale-110 transition-transform shadow-inner border border-white/30">
+                <Plus className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3 text-center tracking-tight">Plan New Trip</h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-8 text-center font-medium leading-relaxed">Create your custom AI itinerary today.</p>
+              <h3 className="text-lg font-black text-white mb-1 text-center tracking-tight drop-shadow-sm">Plan New Trip</h3>
+              <p className="text-white/80 mb-5 text-center font-medium leading-relaxed text-xs">Create your custom AI itinerary today.</p>
               <Link to="/destinations">
-                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-8 text-xl font-black shadow-xl">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg font-black shadow-lg">
                   Start Planning
                 </Button>
               </Link>
             </div>
 
-            <div className="group relative bg-white/90 backdrop-blur-xl border border-[#D6E9FF] rounded-[40px] shadow-xl p-10 transition-all hover:-translate-y-2">
-              <div className="mx-auto w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-[24px] flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform shadow-inner">
-                <TrendingUp className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+            <div className="group relative bg-white/20 backdrop-blur-xl border border-white/30 rounded-[24px] shadow-lg p-6 transition-all hover:-translate-y-2">
+              <div className="mx-auto w-12 h-12 bg-white/10 dark:bg-purple-900/30 rounded-[16px] flex items-center justify-center mb-4 transform group-hover:-rotate-12 transition-transform shadow-inner border border-white/20">
+                <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3 text-center tracking-tight">Analytics</h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-8 text-center font-medium leading-relaxed">View your detailed travel spending reports.</p>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full py-8 text-xl font-black shadow-xl">
+              <h3 className="text-lg font-black text-white mb-1 text-center tracking-tight drop-shadow-sm">Analytics</h3>
+              <p className="text-white/70 mb-5 text-center font-medium leading-relaxed text-xs">View your detailed travel spending reports.</p>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full py-6 text-lg font-black shadow-lg">
                 View Reports
               </Button>
             </div>
           </div>
 
           {/* Recent Trips */}
-          <div className="mb-16">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="text-4xl font-black text-white tracking-tighter drop-shadow-lg">Recent Adventures</h2>
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black text-white tracking-tighter drop-shadow-lg">Recent Adventures</h2>
               <Link to="/trips">
-                <Button variant="outline" className="bg-white/10 backdrop-blur-md border hover:bg-white text-white hover:text-blue-600 font-black rounded-full px-8 py-6 text-lg border-white/20 transition-all">
+                <Button variant="outline" className="bg-white/10 backdrop-blur-md border hover:bg-white text-white hover:text-blue-600 font-black rounded-full px-6 py-3 text-sm border-white/20 transition-all">
                   See All Trips
                 </Button>
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recentTrips.length > 0 ? recentTrips.map((trip) => (
-                <div key={trip.id} className="group relative bg-white dark:bg-white rounded-[32px] shadow-2xl overflow-hidden border border-white/40 dark:border-white/20 transition-all duration-500 hover:-translate-y-2">
-                  <div className="relative h-48 overflow-hidden">
+                <div key={trip._id || trip.id} className="group relative bg-white/20 backdrop-blur-lg rounded-[20px] shadow-lg overflow-hidden border border-white/30 transition-all duration-500 hover:-translate-y-2">
+                  <div className="relative h-32 overflow-hidden">
                     <img
-                      src={trip.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800'}
-                      alt={trip.destination}
+                      src={trip.destinationImage || trip.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800'}
+                      alt={trip.destinationName || trip.destination}
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div className="absolute top-4 right-4 z-10">
+                    <div className="absolute top-3 right-3 z-10">
                       {getStatusBadge(trip.status)}
                     </div>
                   </div>
-                  <div className="p-8">
-                    <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-4 tracking-tight group-hover:text-blue-600 transition-colors">{trip.destination}</h3>
-                    <div className="flex items-center justify-between mb-8">
-                      <div className="flex items-center space-x-2 text-gray-500 font-bold">
-                        <Calendar className="h-5 w-5 text-blue-500" />
-                        <span>{new Date(trip.date).toLocaleDateString()}</span>
+                  <div className="p-4">
+                    <h3 className="text-lg font-black text-white mb-2 tracking-tight group-hover:text-blue-100 transition-colors uppercase drop-shadow-sm">{trip.destinationName || trip.destination}</h3>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2 text-white/70 font-bold text-[10px]">
+                        <Calendar className="h-3 w-3 text-blue-200" />
+                        <span>{(trip.startDate || trip.date) ? new Date(trip.startDate || trip.date).toLocaleDateString() : 'No date'}</span>
                       </div>
-                      <div className="flex items-center space-x-1 text-emerald-600 font-black text-2xl">
-                        <DollarSign className="h-6 w-6 stroke-[3px]" />
-                        <span>{trip.budget.toLocaleString()}</span>
+                      <div className="flex items-center space-x-1 text-white font-black text-lg">
+                        <DollarSign className="h-4 w-4 stroke-[2px]" />
+                        <span>{(trip.budget || 0).toLocaleString()} {trip.currency || 'INR'}</span>
                       </div>
                     </div>
-                    <Button className="w-full bg-black hover:bg-gray-800 text-white rounded-full py-7 font-black text-xl shadow-lg hover:shadow-xl transition-all">
-                      View Itinerary <ChevronRight className="h-6 w-6 ml-2" />
+                    <Button className="w-full bg-white/10 hover:bg-white/20 text-white rounded-full py-4 font-black text-sm shadow-lg border border-white/20 transition-all h-10">
+                      View Itinerary <ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
                   </div>
                 </div>
