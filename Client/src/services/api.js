@@ -23,7 +23,6 @@ const getApiBaseUrl = () => {
     // This is a fallback - ideally VITE_API_BASE_URL should be set in Netlify
     if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
       console.warn('VITE_API_BASE_URL not set. Please configure it in Netlify environment variables.');
-      return ''; // Return empty string to trigger configuration error
     }
   }
 
