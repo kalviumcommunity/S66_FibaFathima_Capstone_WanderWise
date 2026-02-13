@@ -15,18 +15,7 @@ const getApiBaseUrl = () => {
     }
   }
 
-  // Development fallback - match server default port (5002)
-  // Check if we're in production by looking at the hostname
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    // If deployed on Netlify, try to construct the Render URL
-    // This is a fallback - ideally VITE_API_BASE_URL should be set in Netlify
-    if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
-      console.warn('VITE_API_BASE_URL not set. Please configure it in Netlify environment variables.');
-    }
-  }
-
-  // Local development fallback
+  // DEFAULT FALLBACK: Local Development
   return 'http://localhost:5002/api';
 };
 
