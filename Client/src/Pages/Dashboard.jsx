@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
@@ -25,6 +25,7 @@ import { tripApiService } from '../services/tripApiService';
 import { getUserStats } from '../services/userService';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [recentTrips, setRecentTrips] = useState([]);
   const [stats, setStats] = useState({
@@ -251,7 +252,13 @@ const Dashboard = () => {
                         <span>{(trip.budget || 0).toLocaleString()} {trip.currency || 'INR'}</span>
                       </div>
                     </div>
-                    <Button className="w-full bg-white/10 hover:bg-white/20 text-white rounded-full py-4 font-black text-sm shadow-lg border border-white/20 transition-all h-10">
+                    <Button
+                      className="w-full bg-white/10 hover:bg-white/20 text-white rounded-full py-4 font-black text-sm shadow-lg border border-white/20 transition-all h-10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/itinerary/${trip._id || trip.id}`);
+                      }}
+                    >
                       View Itinerary <ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
                   </div>
