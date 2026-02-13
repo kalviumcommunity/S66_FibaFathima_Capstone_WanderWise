@@ -21,6 +21,8 @@ import BudgetPlanner from './Pages/BudgetPlanner';
 import Quiz from './Pages/Quiz';
 import TripGenerator from './Pages/TripGenerator';
 import About from './Pages/About';
+import Trips from './Pages/Trips';
+import ComingSoon from './Pages/ComingSoon';
 
 // Components
 import ProtectedRoute from './Components/ProtectedRoute';
@@ -46,8 +48,10 @@ function App() {
 
               {/* Protected routes */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
               <Route path="/itinerary" element={<ProtectedRoute><ItineraryView /></ProtectedRoute>} />
               <Route path="/itinerary/:id" element={<ProtectedRoute><ItineraryView /></ProtectedRoute>} />
+              <Route path="/coming-soon/:tripId" element={<ProtectedRoute><ComingSoon /></ProtectedRoute>} />
               <Route path="/experience-discovery" element={<ProtectedRoute><ExperienceDiscovery /></ProtectedRoute>} />
               <Route path="/journal/:tripId" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
               <Route path="/reflection" element={<ProtectedRoute><Reflection /></ProtectedRoute>} />

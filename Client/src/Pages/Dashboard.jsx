@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
@@ -26,6 +26,7 @@ import { getUserStats } from '../services/userService';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [recentTrips, setRecentTrips] = useState([]);
   const [stats, setStats] = useState({
     totalTrips: 0,
@@ -40,10 +41,14 @@ const Dashboard = () => {
         const trips = await tripApiService.getTrips();
         setRecentTrips(trips.slice(0, 3));
 
+        // Calculate total spent from all trips
+        const totalSpent = trips.reduce((sum, trip) => sum + (trip.budget || 0), 0);
+
         const userStats = await getUserStats(user?._id);
         setStats({
           ...userStats,
           totalTrips: trips.length,
+          totalSpent: totalSpent,
           upcomingTrips: trips.filter(trip => new Date(trip.startDate) > new Date()).length
         });
       } catch (error) {
@@ -227,7 +232,11 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recentTrips.length > 0 ? recentTrips.map((trip) => (
-                <div key={trip._id || trip.id} className="group relative bg-white/20 backdrop-blur-lg rounded-[20px] shadow-lg overflow-hidden border border-white/30 transition-all duration-500 hover:-translate-y-2">
+                <div
+                  key={trip._id || trip.id}
+                  className="group relative bg-white/20 backdrop-blur-lg rounded-[20px] shadow-lg overflow-hidden border border-white/30 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+                  onClick={() => navigate(`/itinerary/${trip._id || trip.id}`)}
+                >
                   <div className="relative h-32 overflow-hidden">
                     <img
                       src={trip.destinationImage || trip.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800'}
