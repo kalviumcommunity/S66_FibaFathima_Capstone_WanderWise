@@ -180,13 +180,13 @@ const ItineraryView = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Header Info */}
-          <div className="mb-12">
-            <h2 className="text-6xl md:text-8xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl transform -rotate-1">
-              {trip.destinationId.name} <br /> <span className="text-4xl md:text-6xl opacity-80 uppercase italic">Itinerary Edit</span>
+          <div className="mb-8">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tighter drop-shadow-2xl transform -rotate-1">
+              {trip.destinationId.name} <br /> <span className="text-2xl md:text-4xl opacity-80 uppercase italic">Itinerary Edit</span>
             </h2>
-            <div className="flex items-center gap-4 bg-white/20 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white font-black w-fit shadow-2xl">
-              <Calendar className="h-6 w-6 text-blue-300" />
-              <span className="text-xl tracking-tight">
+            <div className="flex items-center gap-3 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-white font-black w-fit shadow-2xl">
+              <Calendar className="h-5 w-5 text-blue-300" />
+              <span className="text-lg tracking-tight">
                 {new Date(trip.startDate).toLocaleDateString()} — {new Date(trip.endDate).toLocaleDateString()}
               </span>
             </div>
@@ -194,60 +194,60 @@ const ItineraryView = () => {
 
           <div className="space-y-12">
             {trip.itinerary.map((day, dayIndex) => (
-              <Card key={dayIndex} className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[50px] shadow-3xl border border-white/40 dark:border-slate-800 overflow-hidden transform hover:scale-[1.01] transition-all duration-500">
-                <CardHeader className="p-10 md:p-14 bg-gradient-to-r from-gray-50 to-transparent dark:from-slate-800/50">
+              <Card key={dayIndex} className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[30px] shadow-3xl border border-white/40 dark:border-slate-800 overflow-hidden transform hover:scale-[1.01] transition-all duration-500">
+                <CardHeader className="p-6 md:p-8 bg-gradient-to-r from-gray-50 to-transparent dark:from-slate-800/50">
                   <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-[24px] flex items-center justify-center font-black text-3xl shadow-2xl transform -rotate-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-black dark:bg-white text-white dark:text-black rounded-[16px] flex items-center justify-center font-black text-xl shadow-2xl transform -rotate-6">
                         {day.day}
                       </div>
                       <div>
-                        <span className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.3em] italic">Mission Segment</span>
-                        <h4 className="text-4xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">Day Operation</h4>
+                        <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.3em] italic">Mission Segment</span>
+                        <h4 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">Day Operation</h4>
                       </div>
                     </div>
                     <Button
                       variant="outline"
                       onClick={() => setEditingDay(editingDay === dayIndex ? null : dayIndex)}
-                      className="rounded-full border-2 border-blue-600 text-blue-600 font-black hover:bg-blue-600 hover:text-white px-8 h-14 text-lg transition-all shadow-xl"
+                      className="rounded-full border-2 border-blue-600 text-blue-600 font-black hover:bg-blue-600 hover:text-white px-6 h-10 text-sm transition-all shadow-xl"
                     >
-                      <Plus className="h-6 w-6 mr-2 stroke-[3px]" />
+                      <Plus className="h-4 w-4 mr-2 stroke-[3px]" />
                       New Task
                     </Button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-10 md:p-14 pt-0">
-                  <div className="space-y-6">
+                <CardContent className="p-6 md:p-8 pt-0">
+                  <div className="space-y-4">
                     {day.activities.map((activity, activityIndex) => (
-                      <div key={activityIndex} className="flex items-center justify-between p-8 bg-gray-50 dark:bg-slate-800/50 rounded-[32px] border-2 border-transparent hover:border-blue-500/20 hover:bg-white dark:hover:bg-slate-800 transition-all group">
-                        <div className="flex items-center gap-6">
-                          <div className="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></div>
-                          <span className="text-2xl font-bold text-gray-700 dark:text-gray-200 group-hover:text-blue-600 transition-colors">{activity}</span>
+                      <div key={activityIndex} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800/50 rounded-[20px] border-2 border-transparent hover:border-blue-500/20 hover:bg-white dark:hover:bg-slate-800 transition-all group">
+                        <div className="flex items-center gap-4">
+                          <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></div>
+                          <span className="text-lg font-bold text-gray-700 dark:text-gray-200 group-hover:text-blue-600 transition-colors">{activity}</span>
                         </div>
                         <Button
                           variant="ghost"
                           onClick={() => removeActivity(dayIndex, activityIndex)}
-                          className="w-14 h-14 rounded-2xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
+                          className="w-10 h-10 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
                         >
-                          <Trash className="h-7 w-7" />
+                          <Trash className="h-5 w-5" />
                         </Button>
                       </div>
                     ))}
 
                     {editingDay === dayIndex && (
-                      <div className="flex flex-col md:flex-row gap-4 mt-12 bg-blue-50/50 dark:bg-blue-900/10 p-8 rounded-[40px] border-2 border-blue-100 dark:border-blue-900/30 animate-fade-in-up">
+                      <div className="flex flex-col md:flex-row gap-3 mt-6 bg-blue-50/50 dark:bg-blue-900/10 p-6 rounded-[30px] border-2 border-blue-100 dark:border-blue-900/30 animate-fade-in-up">
                         <Input
                           placeholder="What's the next objective?"
                           value={newActivity}
                           onChange={(e) => setNewActivity(e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && addActivity(dayIndex)}
-                          className="flex-1 bg-white dark:bg-slate-800 h-16 rounded-2xl px-6 text-xl font-medium border-2 border-transparent focus:border-blue-500 shadow-xl"
+                          className="flex-1 bg-white dark:bg-slate-800 h-12 rounded-xl px-4 text-base font-medium border-2 border-transparent focus:border-blue-500 shadow-xl"
                         />
-                        <div className="flex gap-4">
-                          <Button onClick={() => addActivity(dayIndex)} className="h-16 px-10 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black text-xl uppercase italic shadow-2xl hover:scale-105 transition-all">
+                        <div className="flex gap-3">
+                          <Button onClick={() => addActivity(dayIndex)} className="h-12 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-black text-base uppercase italic shadow-2xl hover:scale-105 transition-all">
                             Deploy
                           </Button>
-                          <Button variant="ghost" onClick={() => setEditingDay(null)} className="h-16 px-8 rounded-2xl font-black text-gray-400 hover:text-red-500 transition-all">
+                          <Button variant="ghost" onClick={() => setEditingDay(null)} className="h-12 px-6 rounded-xl font-black text-gray-400 hover:text-red-500 transition-all">
                             Abort
                           </Button>
                         </div>
@@ -260,21 +260,21 @@ const ItineraryView = () => {
           </div>
 
           {/* Quick Actions Footer */}
-          <div className="mt-20 flex flex-col md:flex-row items-center justify-center gap-8">
+          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
             <Button
               size="lg"
               variant="outline"
-              onClick={() => navigate(`/journal/${trip._id}`)}
-              className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white rounded-full px-12 py-10 text-2xl font-black hover:bg-white hover:text-black transition-all shadow-2xl uppercase italic tracking-tighter"
+              onClick={() => navigate(`/coming-soon/${trip._id}`)}
+              className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white rounded-full px-8 py-6 text-xl font-black hover:bg-white hover:text-black transition-all shadow-2xl uppercase italic tracking-tighter"
             >
-              Secure Journal <Zap className="ml-4 w-8 h-8 text-yellow-400" />
+              Secure Journal <Zap className="ml-3 w-6 h-6 text-yellow-400" />
             </Button>
             <Button
               size="lg"
               onClick={() => navigate('/experience-discovery')}
-              className="bg-black dark:bg-white text-white dark:text-black rounded-full px-12 py-10 text-2xl font-black hover:bg-blue-600 hover:text-white transition-all shadow-2xl uppercase italic tracking-tighter scale-110"
+              className="bg-black dark:bg-white text-white dark:text-black rounded-full px-8 py-6 text-xl font-black hover:bg-blue-600 hover:text-white transition-all shadow-2xl uppercase italic tracking-tighter scale-110"
             >
-              Scout Intel <ArrowLeft className="ml-4 w-8 h-8 rotate-180 stroke-[3px]" />
+              Scout Intel <ArrowLeft className="ml-3 w-6 h-6 rotate-180 stroke-[3px]" />
             </Button>
           </div>
         </div>
