@@ -65,6 +65,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
   const getStatusBadge = (status) => {

@@ -264,7 +264,7 @@ const ItineraryView = () => {
             <Button
               size="lg"
               variant="outline"
-              onClick={() => navigate(`/coming-soon/${trip._id}`)}
+              onClick={() => navigate(`/journal/${trip._id}`)}
               className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white rounded-full px-8 py-6 text-xl font-black hover:bg-white hover:text-black transition-all shadow-2xl uppercase italic tracking-tighter"
             >
               Secure Journal <Zap className="ml-3 w-6 h-6 text-yellow-400" />

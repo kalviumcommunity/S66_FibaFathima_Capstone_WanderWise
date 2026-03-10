@@ -146,7 +146,7 @@ const Index = () => {
 
         {/* Call to Action */}
         <div className="w-full max-w-md space-y-4 pt-4 text-center">
-          <Link to="/login" className="block w-full">
+          <Link to={isLoggedIn ? "/dashboard" : "/login"} className="block w-full">
             <button className="w-full bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold text-lg py-5 rounded-full shadow-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.2)] hover:scale-105 transition-all duration-300 group-hover:bg-white/30 drop-shadow-sm">
               Get Started
             </button>

@@ -152,9 +152,9 @@ const TripGenerator = () => {
         }))
       };
 
-      await tripApiService.createTrip(formattedTrip);
+      const response = await tripApiService.createTrip(formattedTrip);
       toast.success("Mission saved to Secure Cloud!");
-      navigate('/dashboard');
+      navigate(`/itinerary/${response._id || response.id}`);
     } catch (error) {
       console.error('Error saving trip:', error);
       toast.error("Cloud synchronization failed.");

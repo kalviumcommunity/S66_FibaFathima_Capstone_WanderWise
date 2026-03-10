@@ -267,28 +267,13 @@ Both services are configured to **automatically start** when deployed:
 - ✅ **Netlify Frontend**: Auto-builds and deploys on push
 - ✅ **Auto-Deploy**: Both services auto-deploy on every push to `main` branch
 
-### 📋 Quick Deployment Setup
 
-**For your deployed link to work automatically, you need to:**
-
-1. **Set Netlify Environment Variable:**
-   - Go to Netlify → Site settings → Environment variables
-   - Add: `VITE_API_BASE_URL` = `https://your-render-backend-url.onrender.com/api`
-   - Replace with your actual Render backend URL
-   - Trigger a new deployment after adding
-
-2. **Verify Render Backend:**
-   - Check Render dashboard - service should show "Live"
-   - Test: `https://your-backend-url.onrender.com/health`
-
-📖 **Detailed instructions:** See [DEPLOYMENT_SETUP.md](./DEPLOYMENT_SETUP.md)  
-⚡ **Quick checklist:** See [QUICK_DEPLOYMENT_CHECKLIST.md](./QUICK_DEPLOYMENT_CHECKLIST.md)
 
 ## 👥 Project Team
 
 - **Developer**: Fiba Fathima
 - **Project Type**: Capstone Project
-- **Institution**: [Your Institution]
-- **Completion Date**: 2024
+- **Completion Date**: 2026
+
 
 

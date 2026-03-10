@@ -44,15 +44,11 @@ const sampleDestinations = [
   },
   {
     name: "Paris, France",
-    description: "The City of Light offers iconic landmarks, world-class museums, and unforgettable cuisine in a romantic setting.",
+    description: "The city of light, fashion, and culinary excellence.",
     country: "France",
     location: "Paris",
-    images: [
-      "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=800",
-      "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800",
-      "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=800"
-    ],
-    activities: ["Museum Visits", "Eiffel Tower", "Seine River Cruise", "Shopping", "Food Tours"],
+    images: ["https://images.unsplash.com/photo-1502602898669-a316b8ac97e6?w=800"],
+    activities: ["Eiffel Tower Visit", "Louvre Museum", "Seine River Cruise", "Shopping", "Food Tours"],
     bestSeason: "April to June, September to October",
     popularAttractions: ["Eiffel Tower", "Louvre Museum", "Notre-Dame Cathedral", "Champs-Élysées", "Arc de Triomphe"],
     isPopular: false,
