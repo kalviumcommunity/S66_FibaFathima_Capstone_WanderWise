@@ -19,11 +19,14 @@ const getApiBaseUrl = () => {
   // Check if we're in production by looking at the hostname
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
+    
     // If deployed on Netlify, try to construct the Render URL
-    // This is a fallback - ideally VITE_API_BASE_URL should be set in Netlify
     if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
-      console.warn('VITE_API_BASE_URL not set. Please configure it in Netlify environment variables.');
-      return ''; // Return empty string to trigger configuration error
+      console.warn('VITE_API_BASE_URL not set. Using fallback...');
+      
+      // Production fallback - adjust this to your actual Render backend URL
+      // Based on your error logs: s66-fibafathima-capstone-wanderwise.onrender.com
+      return 'https://s66-fibafathima-capstone-wanderwise.onrender.com/api';
     }
   }
 
@@ -134,6 +137,17 @@ class ApiService {
       // Provide user-friendly error messages
       if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
         throw new Error('Unable to connect to server. Please check your internet connection and ensure the server is running.');
+      }
+
+      // Handle 500 errors from server
+      if (error.status === 500) {
+        console.error('Server 500 error - check Render server logs');
+        throw new Error('Server error. Please try again later or contact support.');
+      }
+
+      // Handle 404 errors
+      if (error.status === 404) {
+        throw new Error('API endpoint not found. Please refresh the page.');
       }
 
       if (this.baseURL.includes('your-render-app.onrender.com')) {
