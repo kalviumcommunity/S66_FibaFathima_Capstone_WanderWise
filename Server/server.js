@@ -58,6 +58,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 const allowedOrigins = [
   'http://localhost:5002',
   'https://wanderwiseca.netlify.app',
+  'https://wanderwise-capstone.netlify.app',
+  'https://s66-fibafathima-capstone-wanderwise.onrender.com',
   process.env.CLIENT_ORIGIN,
   process.env.CLIENT_URL
 ].filter(Boolean).map(origin => origin.replace(/\/$/, '')); // Remove trailing slashes
@@ -70,9 +72,16 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
-    // In production, allow Netlify preview deployments
-    if (isProduction && origin.includes('.netlify.app')) {
-      return callback(null, true);
+    // In production, allow Netlify preview deployments and all common patterns
+    if (isProduction) {
+      // Allow any Netlify deployment
+      if (origin.includes('.netlify.app') || origin.includes('.netlify.com')) {
+        return callback(null, true);
+      }
+      // Allow any Render deployment
+      if (origin.includes('.onrender.com')) {
+        return callback(null, true);
+      }
     }
 
     if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes(origin)) {
