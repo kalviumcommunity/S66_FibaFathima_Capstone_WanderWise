@@ -9,12 +9,16 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8080
+        value: 5003
       - key: MONGO_URL
         value: mongodb+srv://fibaaah:Jaseenamujeeb8830@fibaaah.dnfd5.mongodb.net/Capstone
       - key: JWT_SECRET
-        generateValue: true
+        value: fiba8830-wanderwise-secure-jwt-key
+      - key: GOOGLE_CLIENT_ID
+        value: 854277378956-k3q4qobu9k8f25kks9rdbv50cvbuhdeh.apps.googleusercontent.com
       - key: CLIENT_ORIGIN
+        value: https://wanderwiseca.netlify.app
+      - key: CLIENT_URL
         value: https://wanderwiseca.netlify.app
     runtime:
       version: 20
