@@ -41,6 +41,7 @@ const destinationRoutes = require('./Routes/destination');
 const tripRoutes = require('./Routes/Trip');
 const journalRoutes = require('./Routes/journals');
 const adminRoutes = require('./Routes/admin');
+const budgetRoutes = require('./Routes/budget');
 
 // Import database connection
 const connectDB = require('./db/database');
@@ -56,7 +57,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS configuration
 const allowedOrigins = [
-  'http://localhost:5002',
+  'http://localhost:5003',
+  'http://localhost:5173',
   'https://wanderwiseca.netlify.app',
   'https://wanderwise-capstone.netlify.app',
   'https://s66-fibafathima-capstone-wanderwise.onrender.com',
@@ -124,6 +126,7 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/journals', journalRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/budget', budgetRoutes);
 
 // Welcome endpoint
 app.get('/', (req, res) => {
@@ -191,8 +194,8 @@ app.use((error, req, res, next) => {
 });
 
 // Start server
-// Use 5002 as the default port to avoid conflicts with macOS system services
-const PORT = process.env.PORT || 5002;
+// Use 5003 as the default port to avoid conflicts with macOS system services and other processes
+const PORT = process.env.PORT || 5003;
 
 // Add compatibility check for buffer
 try {

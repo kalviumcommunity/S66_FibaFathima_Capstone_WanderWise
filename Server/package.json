@@ -5,13 +5,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "admin-utils": "node scripts/admin-utils.js",
     "create-admin": "node scripts/createAdmin.js",
     "seed-destinations": "node scripts/seedDestinations.js",
-    "deployment-check": "node scripts/deploymentCheck.js",
-    "api-test": "node scripts/apiTest.js",
-    "predeploy": "node scripts/updateDependencies.js",
-    "test-buffer": "node scripts/testBufferCompatibility.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check-destinations": "node scripts/checkDestinations.js"
   },
   "keywords": [
     "travel",
