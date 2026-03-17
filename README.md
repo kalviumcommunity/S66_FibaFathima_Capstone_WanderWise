@@ -63,6 +63,7 @@ WanderWise is an intelligent travel planning platform that helps users discover 
 - **User Authentication**: Email/password signup and Google OAuth login
 - **Destination Management**: Browse and search travel destinations from MongoDB
 - **Trip Planning**: Create personalized itineraries with 5-question quiz
+- **Budget Tracking**: Track expenses by category (Transportation, Accommodation, Food, Activities, Miscellaneous)
 - **Travel Journal**: Document experiences with mood tracking (1-5 scale)
 - **Reflection Dashboard**: Analyze travel patterns and mood trends with charts
 - **Admin Panel**: Manage destinations and users with full CRUD operations
@@ -111,7 +112,8 @@ VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id
 **Note:** 
 - Use `VITE_API_BASE_URL` (preferred) or `VITE_API_BASE` (alternative)
 - Include `/api` at the end of the URL (e.g., `https://your-app.onrender.com/api`)
-- For local development, you can omit this variable (defaults to `http://localhost:5002/api`)
+- For local development, default is `http://localhost:5003/api`
+- Port changed from 5002 to 5003 to avoid macOS system conflicts
 
 ## 🔧 Installation & Setup
 
@@ -215,6 +217,13 @@ cd Client && npm run dev        # Development mode
 - `POST /api/journals/:id/entries` - Add journal entry (owner only)
 - `PUT /api/journals/:id/entries/:entryId` - Update entry (owner only)
 - `DELETE /api/journals/:id/entries/:entryId` - Delete entry (owner only)
+
+### Budget
+- `GET /api/budget/trip/:tripId` - Get budget for trip (owner only)
+- `POST /api/budget` - Add budget item (authenticated)
+- `PUT /api/budget/:id` - Update budget item (owner only)
+- `DELETE /api/budget/:id` - Delete budget item (owner only)
+- `DELETE /api/budget/trip/:tripId/all` - Clear all budget items (owner only)
 
 ### Admin
 - `GET /api/admin/stats` - Platform statistics (admin only)

@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { tripApiService } from '../services/tripApiService';
-import { getUserStats } from '../services/userService';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -41,11 +40,20 @@ const Dashboard = () => {
         const trips = await tripApiService.getTrips();
         setRecentTrips(trips.slice(0, 3));
 
-        const userStats = await getUserStats(user?._id);
+        // Calculate stats from actual trip data
+        const upcomingCount = trips.filter(trip => new Date(trip.startDate) > new Date()).length;
+        
+        // Extract unique destinations
+        const uniqueDestinations = new Set(trips.map(trip => trip.destination)).size;
+        
+        // Calculate total spent (if budget info is available)
+        const totalSpent = trips.reduce((sum, trip) => sum + (parseInt(trip.budget) || 0), 0);
+
         setStats({
-          ...userStats,
           totalTrips: trips.length,
-          upcomingTrips: trips.filter(trip => new Date(trip.startDate) > new Date()).length
+          totalSpent,
+          upcomingTrips: upcomingCount,
+          favoriteDestinations: uniqueDestinations
         });
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);

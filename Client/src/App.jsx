@@ -23,6 +23,7 @@ import TripGenerator from './Pages/TripGenerator';
 import About from './Pages/About';
 import Trips from './Pages/Trips';
 import ComingSoon from './Pages/ComingSoon';
+import ResponsiveTest from './Pages/ResponsiveTest';
 
 // Components
 import ProtectedRoute from './Components/ProtectedRoute';
@@ -60,6 +61,9 @@ function App() {
               <Route path="/budget/:destinationId" element={<ProtectedRoute><BudgetPlanner /></ProtectedRoute>} />
               <Route path="/quiz/:destinationId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
               <Route path="/generate-trip/:destinationId" element={<ProtectedRoute><TripGenerator /></ProtectedRoute>} />
+              
+              {/* Development/Test routes */}
+              <Route path="/test-responsive" element={<ResponsiveTest />} />
             </Routes>
             <Toaster
               position="top-right"
