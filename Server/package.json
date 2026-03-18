@@ -8,7 +8,8 @@
     "admin-utils": "node scripts/admin-utils.js",
     "create-admin": "node scripts/createAdmin.js",
     "seed-destinations": "node scripts/seedDestinations.js",
-    "check-destinations": "node scripts/checkDestinations.js"
+    "check-destinations": "node scripts/checkDestinations.js",
+    "check-backend": "node scripts/checkBackend.js"
   },
   "keywords": [
     "travel",
