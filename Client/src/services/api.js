@@ -15,7 +15,7 @@ const getApiBaseUrl = () => {
     }
   }
 
-  // Development fallback - match server default port (5002)
+  // Development fallback - match server default port (5003)
   // Check if we're in production by looking at the hostname
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
@@ -35,7 +35,7 @@ const getApiBaseUrl = () => {
   }
 
   // Local development fallback
-  return 'http://localhost:5002/api';
+  return 'http://localhost:5003/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
