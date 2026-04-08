@@ -8,13 +8,17 @@ const { authenticateToken, requireAdmin, requireAdminOrOwner } = require('../mid
 // Initialize Google OAuth client
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Generate JWT token
 const generateToken = (userId) => {
   if (!process.env.JWT_SECRET) {
-    console.error('❌ JWT_SECRET is not defined in environment variables');
-    throw new Error('Server configuration error: JWT_SECRET is missing');
+    console.error('❌ JWT_SECRET is not defined in environment variables. Current env:', Object.keys(process.env));
+    throw new Error('JWT_SECRET is missing on the server');
   }
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  try {
+    return jwt.sign({ userId: userId.toString() }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  } catch (error) {
+    console.error('❌ JWT signing failed:', error);
+    throw new Error('Token generation failed');
+  }
 };
 
 // Register new user
@@ -97,8 +101,16 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Login failed', error: error.message });
+    console.error('❌ Login error details:', {
+      message: error.message,
+      stack: error.stack,
+      email: req.body.email
+    });
+    res.status(500).json({ 
+      message: 'Login failed due to a server error', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 

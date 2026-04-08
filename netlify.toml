@@ -16,3 +16,8 @@
 #   VITE_GOOGLE_CLIENT_ID = your_google_oauth_client_id
 #
 # After adding variables, trigger a new deployment! 
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

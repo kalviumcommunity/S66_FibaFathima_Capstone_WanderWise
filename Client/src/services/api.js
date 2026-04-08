@@ -146,7 +146,9 @@ class ApiService {
       // Handle 500 errors from server
       if (error.status === 500) {
         console.error('Server 500 error - check Render server logs');
-        throw new Error('Server error. Please try again later or contact support.');
+        // If the server provided a specific message, use it, otherwise use generic
+        const backendMessage = error.data?.message || error.data?.error || error.message;
+        throw new Error(`Server Error: ${backendMessage}. Please check backend logs or configuration.`);
       }
 
       // Handle 404 errors
