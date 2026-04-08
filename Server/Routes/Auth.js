@@ -108,8 +108,8 @@ router.post('/login', async (req, res) => {
     });
     res.status(500).json({ 
       message: 'Login failed due to a server error', 
-      error: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: error.message || 'Unknown error occurred',
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
