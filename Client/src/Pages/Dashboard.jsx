@@ -25,7 +25,7 @@ import { tripApiService } from '../services/tripApiService';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [recentTrips, setRecentTrips] = useState([]);
   const [stats, setStats] = useState({
     totalTrips: 0,
@@ -140,10 +140,23 @@ const Dashboard = () => {
                   <LogOut className="h-5 w-5 mr-2" />
                   Logout
                 </Button>
+                
+                {isAdmin() && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/admin')} 
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700 rounded-full font-black px-4 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    Admin Panel
+                  </Button>
+                )}
+
                 <div className="p-1 bg-white/20 rounded-full border border-white/20">
                   <Avatar className="h-10 w-10 border-2 border-white shadow-lg">
-                    <AvatarImage src={user?.avatar} />
-                    <AvatarFallback className="bg-blue-600 text-white font-bold">{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarImage src={user?.profilePicture} />
+                    <AvatarFallback className="bg-blue-600 text-white font-bold">{user?.username?.charAt(0) || 'U'}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
@@ -155,7 +168,7 @@ const Dashboard = () => {
           {/* Welcome Section */}
           <div className="mb-8 text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl transform -rotate-1">
-              Hey, {user?.name || 'Traveler'}! 👋
+              Hey, {user?.username || 'Traveler'}! 👋
             </h1>
             <p className="text-white/90 text-lg font-medium tracking-tight drop-shadow-lg">
               "Ready to plan your next adventure? Let's make it unforgettable."
