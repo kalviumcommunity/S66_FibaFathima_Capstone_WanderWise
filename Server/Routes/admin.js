@@ -478,4 +478,43 @@ router.get('/analytics/destinations', authenticateToken, requireAdmin, async (re
   }
 });
 
+// ========== TRIP MANAGEMENT ==========
+
+// Get all trips for admin
+router.get('/trips', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const trips = await Trip.find()
+      .populate('userId', 'username email')
+      .populate('destinationId', 'name')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    
+    const total = await Trip.countDocuments();
+    
+    res.json({
+      trips,
+      totalPages: Math.ceil(total / limit),
+      currentPage: parseInt(page),
+      total
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch all trips', error: error.message });
+  }
+});
+
+// Delete a trip
+router.delete('/trips/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const trip = await Trip.findByIdAndDelete(req.params.id);
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+    res.json({ message: 'Trip deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete trip', error: error.message });
+  }
+});
+
 module.exports = router; 

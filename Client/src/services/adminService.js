@@ -125,6 +125,29 @@ class AdminService {
       throw error;
     }
   }
+
+  // ========== TRIP MANAGEMENT ==========
+
+  // Get all trips
+  async getTrips(params = {}) {
+    try {
+      const queryString = new URLSearchParams(params).toString();
+      const response = await apiService.get(`/admin/trips?${queryString}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete trip
+  async deleteTrip(tripId) {
+    try {
+      const response = await apiService.delete(`/admin/trips/${tripId}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const adminService = new AdminService();
